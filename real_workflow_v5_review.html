@@ -444,7 +444,7 @@ const wordData={
 "span":{level:"watch",br:"/spæn/",us:"/spæn/"}
 };
 
-const key="real_note_workflow_v9_20260803_study_mode";
+const key="real_note_workflow_v10_20260803_network_first";
 let saved=JSON.parse(localStorage.getItem(key)||"null");
 let state=saved||{cards:initialCards.map((c,i)=>({...c,id:i+1,status:"new",studied:false})),index:0,flipped:false,type:"all",ans:"all",mode:"review"};
 if(!saved||!saved.mode){state.mode=state.mode||"review";if(saved){saved.mode="review";state=saved;}}
