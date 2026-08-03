@@ -1,4 +1,4 @@
-const CACHE_NAME = "english-cards-v4";
+const CACHE_NAME = "english-cards-v5";
 const ASSETS = [
   "./real_workflow_v5_review.html",
   "./manifest.json",
@@ -14,7 +14,7 @@ self.addEventListener("install", e => {
   self.skipWaiting();
 });
 
-// Activate: clean old caches
+// Activate: clean ALL old caches immediately
 self.addEventListener("activate", e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -24,17 +24,14 @@ self.addEventListener("activate", e => {
   self.clients.claim();
 });
 
-// Fetch: cache-first strategy (works offline)
+// Fetch: network-first strategy (always get latest, fallback to cache when offline)
 self.addEventListener("fetch", e => {
   if (e.request.method !== "GET") return;
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(response => {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
-        return response;
-      }).catch(() => caches.match("./real_workflow_v5_review.html"));
-    })
+    fetch(e.request).then(response => {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+      return response;
+    }).catch(() => caches.match(e.request).then(cached => cached || caches.match("./real_workflow_v5_review.html")))
   );
 });
