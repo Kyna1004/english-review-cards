@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English Review Cards</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="English Cards">
+<meta name="theme-color" content="#007AFF">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F5F5F7;color:#1D1D1F;font-family:-apple-system,"SF Pro Display","SF Pro Text","Helvetica Neue","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased}
+.app{max-width:680px;margin:0 auto;padding:32px 16px 48px}
+h1{font-size:28px;font-weight:700;margin:0 0 4px;letter-spacing:-0.5px}
+.sub{color:#86868B;font-size:15px;margin-bottom:20px}
+
+/* Filters — segmented style */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+select{border:0;border-radius:10px;padding:8px 14px;background:#fff;color:#1D1D1F;font-size:14px;font-weight:500;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08);appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2386868B' d='M6 8L2 4h8z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
+
+/* Stats — capsule row */
+.stats{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.stat{background:#fff;border-radius:12px;padding:8px 16px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.stat b{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:#86868B;font-weight:500}
+
+/* Card */
+.card{background:#fff;border-radius:20px;box-shadow:0 2px 16px rgba(0,0,0,0.08);padding:28px 24px;min-height:420px;transition:opacity .3s ease,transform .3s ease}
+.card.fade{opacity:0;transform:translateY(8px)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tag{border-radius:8px;padding:4px 10px;font-size:12px;font-weight:500;background:#F5F5F7;color:#6E6E73}
+.tag.gray{background:#F5F5F7;color:#86868B}
+.tag.amber{background:#FFF4E6;color:#C2410C}
+
+/* Task badge */
+.task-badge{display:inline-block;background:#007AFF;color:#fff;border-radius:8px;padding:6px 14px;font-size:14px;font-weight:600;margin-bottom:14px}
+
+/* Front */
+.label{color:#86868B;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 8px}
+.front{white-space:pre-line;font-size:21px;line-height:1.6;font-weight:600;margin-bottom:20px;color:#1D1D1F}
+
+/* Show Answer button */
+.flip-btn{display:block;width:100%;border:0;border-radius:14px;padding:14px;font-size:16px;font-weight:600;background:#007AFF;color:#fff;cursor:pointer;transition:transform .12s ease,opacity .12s ease;margin-bottom:0}
+.flip-btn:active{transform:scale(0.97);opacity:0.85}
+
+/* Back */
+.back{overflow:hidden;max-height:0;opacity:0;transition:max-height .35s ease,opacity .25s ease}
+.back.show{max-height:800px;opacity:1}
+.back-inner{border-top:1px solid #F2F2F7;margin-top:16px;padding-top:16px;font-size:16px;line-height:1.7}
+.back-section{margin-bottom:12px}
+.back-section:last-child{margin-bottom:0}
+.back-label{color:#86868B;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+
+/* Answer with per-word pronunciation */
+.ans-words{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}
+.aw{display:inline-flex;flex-direction:column;gap:2px}
+.aw-top{display:inline-flex;align-items:center;gap:4px}
+.aw-word{font-size:18px;font-weight:600;color:#1D1D1F}
+.aw-word.tricky{color:#007AFF}
+.aw-word.watch{color:#FF9500}
+.aw-speak{border:0;background:#F5F5F7;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;transition:background .12s ease,transform .12s ease;flex-shrink:0}
+.aw-speak:hover{background:#E5E5EA}
+.aw-speak:active{transform:scale(0.85);background:#007AFF}
+.aw-ipa{font-size:13px;color:#86868B;font-weight:400;padding-left:2px}
+.aw-ipa.tricky{color:#007AFF}
+.aw-ipa.watch{color:#FF9500}
+
+/* Controls */
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.card-controls{grid-template-columns:repeat(3,1fr)}
+button.act{border:0;border-radius:22px;padding:13px 12px;font-size:15px;font-weight:600;cursor:pointer;transition:transform .12s ease,opacity .12s ease;min-height:44px;display:flex;align-items:center;justify-content:center}
+button.act:active{transform:scale(0.96)}
+.btn-good{background:#34C759;color:#fff}
+.btn-hard{background:#FF9500;color:#fff}
+.btn-danger{background:#FF3B30;color:#fff}
+.btn-ghost{background:#E5E5EA;color:#1D1D1F}
+
+/* Editor */
+.editor{margin-top:16px;padding-top:16px;border-top:1px solid #F2F2F7}
+.editor textarea{width:100%;min-height:80px;border:1px solid #D1D1D6;border-radius:10px;padding:10px;font:inherit;line-height:1.5;font-size:15px;resize:vertical}
+.editor .controls{grid-template-columns:1fr}
+
+/* Bottom bar */
+.bottom-bar{display:flex;gap:10px;margin-top:20px}
+.bottom-bar button.act{flex:1}
+
+.note{font-size:13px;color:#86868B;line-height:1.6;margin-top:20px;text-align:center}
+.hidden{display:none}
+
+@media(max-width:560px){
+.app{padding:20px 12px 40px}
+h1{font-size:24px}
+.card{padding:20px 16px;border-radius:16px}
+.front{font-size:19px}
+.card-controls{grid-template-columns:repeat(3,1fr)}
+.stats{gap:6px}
+.stat{padding:6px 12px}
+}
+</style>
+
+<div class="app">
+<h1>English Review Cards</h1>
+<p class="sub">Trust the process</p>
+
+<div class="filters">
+<select id="typeFilter"><option value="all">All types</option><option value="短语表达卡">Phrase</option><option value="句式结构卡">Sentence</option><option value="话题词汇卡">Topic vocab</option></select>
+<select id="ansFilter"><option value="all">All answer types</option><option>word</option><option>phrase</option><option>sentence</option></select>
+</div>
+
+<div class="stats">
+<div class="stat"><b id="pos">1/1</b><span>Position</span></div>
+<div class="stat"><b id="known">0</b><span>Known</span></div>
+<div class="stat"><b id="hard">0</b><span>Hard</span></div>
+<div class="stat"><b id="deleted">0</b><span>Deleted</span></div>
+</div>
+
+<div class="card" id="card">
+<div class="meta" id="meta"></div>
+<div class="task-badge" id="taskBadge"></div>
+<div class="label">Front</div>
+<div class="front" id="front"></div>
+<button class="flip-btn" id="flip">Show Answer</button>
+<div class="back" id="back"><div class="back-inner" id="backInner"></div></div>
+<div class="controls card-controls">
+<button class="act btn-good" id="knownBtn">Got it</button>
+<button class="act btn-hard" id="hardBtn">Hard</button>
+<button class="act btn-danger" id="deleteBtn">Delete</button>
+<button class="act btn-ghost" id="editBtn">Edit</button>
+<button class="act btn-ghost" id="prevBtn">Previous</button>
+<button class="act btn-ghost" id="nextBtn">Next</button>
+</div>
+<div class="editor hidden" id="editor">
+<div class="label">Edit front</div>
+<textarea id="frontEdit"></textarea>
+<div class="label" style="margin-top:10px">Edit back</div>
+<textarea id="backEdit"></textarea>
+<div class="controls"><button class="act flip-btn" id="saveBtn" style="background:#007AFF;color:#fff">Save</button></div>
+</div>
+</div>
+
+<div class="bottom-bar">
+<button class="act btn-ghost" id="resetBtn">Reset all</button>
+<button class="act btn-ghost" id="exportBtn">Export JSON</button>
+</div>
+<p class="note">Blue words = tricky (irregular spelling). Orange words = watch (easy to mispronounce). Tap any word's speaker to hear it individually.</p>
+</div>
+
+<script>
+const initialCards=[
+{"front":"Recall a short phrase.\nIn heat-related illness, which condition comes after heat cramps but before heatstroke?","back":"Answer：heat exhaustion<br><br>Example：If someone has heat exhaustion, move them into the shade and help them cool down.<br><br>Usage note：Remember the rough order: heat cramps → heat exhaustion → heatstroke.<br><br>中文确认：中暑衰竭 / 热衰竭。","type":"话题词汇卡","prompt":"topic_context","answertype":"phrase","task":"Recall a short phrase.","priority":"必背","topic":"处理中暑/过热风险","answer":"heat exhaustion"},
+{"front":"Fill in one word.\nWhich word refers to the most dangerous heat-related condition: heat cramps, heat exhaustion, or ______?","back":"Answer：heatstroke<br><br>Example：Heatstroke is a medical emergency.<br><br>Usage note：Use this word for the most serious condition in the group.<br><br>中文确认：热射病 / 严重中暑。","type":"话题词汇卡","prompt":"contrast","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","answer":"heatstroke"},
+{"front":"Fill in the blank with a short phrase.\nIf you ______ someone with heat exhaustion, move them into the shade.","back":"Answer：come across<br><br>Example：If you come across someone with heat exhaustion, move them into the shade.<br><br>Usage note：come across = find or meet someone/something by chance.<br><br>中文确认：偶然遇到 / 发现。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in the blank with a short phrase.","priority":"必背","topic":"处理中暑/过热风险","answer":"come across"},
+{"front":"Say a short phrase aloud.\nParamedics need to bring the stretcher to the person. Say the action phrase with \"stretcher\".","back":"Answer：take the stretcher over to them<br><br>Example：They took the stretcher over to them.<br><br>Usage note：take ... over to someone = bring something to where someone is.<br><br>中文确认：把担架拿过去给他们。","type":"短语表达卡","prompt":"scenario_recall","answertype":"phrase","task":"Say a short phrase aloud.","priority":"熟悉","topic":"处理中暑/过热风险","answer":"take the stretcher over to them"},
+{"front":"Fill in one word.\nMove them ______ the shade as soon as possible.","back":"Answer：into<br><br>Example：Move them into the shade as soon as possible.<br><br>Usage note：into the shade focuses on the movement; in the shade focuses on the final position.<br><br>中文确认：把他们移到阴凉处。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","answer":"into"},
+{"front":"Recall a short phrase.\nWhat can you use to cool someone down in a heat emergency? Use the phrase for small cold bags.","back":"Answer：ice packs<br><br>Example：Use ice packs to help cool them down.<br><br>Usage note：pack is a noun here: a small bag or pouch.<br><br>中文确认：冰袋。","type":"话题词汇卡","prompt":"topic_context","answertype":"phrase","task":"Recall a short phrase.","priority":"熟悉","topic":"处理中暑/过热风险","answer":"ice packs"},
+{"front":"Fill in two words to complete the phrase.\nEverything went ______ ______.","back":"Answer：horribly wrong<br><br>Example：Everything went horribly wrong.<br><br>Usage note：This is stronger and more dramatic than went wrong.<br><br>中文确认：事情变得非常糟糕 / 情况急转直下。","type":"句式结构卡","prompt":"sentence_frame","answertype":"phrase","task":"Fill in two words to complete the phrase.","priority":"必背","topic":"处理中暑/过热风险","answer":"horribly wrong"},
+{"front":"Fill in one word.\nIn a medical emergency, a device may ______ a shock.","back":"Answer：deliver<br><br>Example：The device can deliver a shock if needed.<br><br>Usage note：deliver can mean give/administer in medical contexts.<br><br>中文确认：实施一次电击 / 给予电击。","type":"短语表达卡","prompt":"collocation","answertype":"word","task":"Fill in one word.","priority":"熟悉","topic":"处理中暑/过热风险","answer":"deliver"},
+{"front":"Fill in one word.\nTake their outer clothes ______ to help them cool down.","back":"Answer：off<br><br>Example：Take their outer clothes off to help them cool down.<br><br>Usage note：take off is the phrasal verb; off is easy to miss.<br><br>中文确认：脱掉他们的外层衣服。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","answer":"off"},
+{"front":"Fill in one word.\nSpray them ______ cold water and fan them.","back":"Answer：with<br><br>Example：Spray them with cold water and fan them.<br><br>Usage note：The pattern is spray someone with water.<br><br>中文确认：用冷水喷他们。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","answer":"with"},
+{"front":"Recall a short phrase.\nTepid water is not hot or cold. What is a more common English word for this temperature?","back":"Answer：lukewarm water<br><br>Example：You can cool them with tepid water.<br><br>Usage note：tepid and lukewarm both mean mildly warm.<br><br>中文确认：微温水 / 不冷不热的水。","type":"话题词汇卡","prompt":"topic_context","answertype":"phrase","task":"Recall a short phrase.","priority":"熟悉","topic":"处理中暑/过热风险","answer":"lukewarm water"},
+{"front":"Say a short phrase aloud.\nYou are cooling someone down. You spray them with water and then use moving air. What is the short action phrase?","back":"Answer：fan them<br><br>Example：Fan them while spraying them with water.<br><br>Usage note：fan is a verb here.<br><br>中文确认：给他们扇风。","type":"短语表达卡","prompt":"scenario_recall","answertype":"phrase","task":"Say a short phrase aloud.","priority":"必背","topic":"处理中暑/过热风险","answer":"fan them"},
+{"front":"Fill in one word or short phrase.\nMake the health advice sound complete:\n\nMake sure you drink plenty of ______.","back":"Answer：water / fluids<br><br>Example：Make sure you drink plenty of water.<br><br>Usage note：drink plenty is understandable, but drink plenty of water is more complete.<br><br>中文确认：多喝水 / 大量饮水。","type":"短语表达卡","prompt":"collocation","answertype":"word","task":"Fill in one word or short phrase.","priority":"熟悉","topic":"处理中暑/过热风险","answer":"water / fluids"},
+{"front":"Fill in the blanks with a short phrase.\nInfants are ______ ______ overheating in hot weather.","back":"Answer：vulnerable to<br><br>Example：Infants are vulnerable to overheating in hot weather.<br><br>Usage note：vulnerable to is followed by a noun or -ing form.<br><br>中文确认：婴儿容易过热。","type":"句式结构卡","prompt":"sentence_frame","answertype":"phrase","task":"Fill in the blanks with a short phrase.","priority":"必背","topic":"处理中暑/过热风险","answer":"vulnerable to"},
+{"front":"Fill in two words.\nKeep the baby out of ______ ______.","back":"Answer：direct sunlight<br><br>Example：Keep the baby out of direct sunlight.<br><br>Usage note：The phrase is direct sunlight, not directly sunlight.<br><br>中文确认：避免阳光直射。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"处理中暑/过热风险","answer":"direct sunlight"},
+{"front":"Fill in one word.\nDo not cover their pram ______ a blanket or sheet.","back":"Answer：with<br><br>Example：Do not cover their pram with a blanket or sheet.<br><br>Usage note：The pattern is cover something with something.<br><br>中文确认：用毯子或床单盖住婴儿车。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","answer":"with"},
+{"front":"Fill in one word.\nCovering a pram with a blanket can rapidly lead to ______.","back":"Answer：overheating<br><br>Example：Covering a pram with a blanket can rapidly lead to overheating.<br><br>Usage note：lead to is followed by a noun or -ing form.<br><br>中文确认：这可能迅速导致过热。","type":"句式结构卡","prompt":"sentence_frame","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","answer":"overheating"},
+{"front":"Fill in one word.\nInstead of covering a pram with a blanket, you can use ______ sun shades.","back":"Answer：clip-on<br><br>Example：Use clip-on sun shades instead of covering the pram with a blanket.<br><br>Usage note：clip-on means something can be attached by clipping it on.<br><br>中文确认：夹式遮阳罩。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in one word.","priority":"熟悉","topic":"处理中暑/过热风险","answer":"clip-on"},
+{"front":"Recall one word.\nWhat word can refer to a small sun umbrella used for shade, especially around a pram?","back":"Answer：parasol<br><br>Example：Parasols can help keep direct sunlight off the baby.<br><br>Usage note：parasol is more specifically for sun protection than umbrella.<br><br>中文确认：遮阳伞。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Recall one word.","priority":"熟悉","topic":"处理中暑/过热风险","answer":"parasol"},
+{"front":"Fill in one word.\nA blanket over a pram can trap heat and reduce ______ around the baby.","back":"Answer：airflow<br><br>Example：Make sure there is enough airflow around the baby.<br><br>Usage note：Common phrases: enough airflow, good airflow, poor airflow.<br><br>中文确认：空气流通 / 气流。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","answer":"airflow"},
+{"front":"Fill in one word.\nA baby carrier or ______ can count as an extra layer of clothing.","back":"Answer：sling<br><br>Example：A baby carrier or sling can count as an extra layer of clothing.<br><br>Usage note：A sling is often a soft cloth-style baby carrier.<br><br>中文确认：婴儿背带 / 吊带。","type":"话题词汇卡","prompt":"contrast","answertype":"word","task":"Fill in one word.","priority":"熟悉","topic":"处理中暑/过热风险","answer":"sling"},
+{"front":"Fill in two words.\nBaby carriers ______ ______ additional layers of clothing.","back":"Answer：count as<br><br>Example：Baby carriers count as additional layers of clothing.<br><br>Usage note：count as = be considered as.<br><br>中文确认：算作 / 被视为额外衣物层。","type":"句式结构卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"处理中暑/过热风险","answer":"count as"},
+{"front":"Fill in two words.\nChoose a lightweight carrier made of ______, ______ fabric.","back":"Answer：natural, breathable<br><br>Example：Choose a lightweight carrier made of natural, breathable fabric.<br><br>Usage note：breathable fabric is a useful product/material phrase.<br><br>中文确认：天然、透气面料。","type":"句式结构卡","prompt":"sentence_frame","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"处理中暑/过热风险","answer":"natural, breathable"}
+];
+
+/* Word-level pronunciation data: level = tricky | watch | basic */
+const wordData={
+"heat":{level:"watch",br:"/hiːt/",us:"/hiːt/"},
+"exhaustion":{level:"tricky",br:"/ɪɡˈzɔːstʃən/",us:"/ɪɡˈzɔːstʃən/"},
+"heatstroke":{level:"tricky",br:"/ˈhiːtstrəʊk/",us:"/ˈhiːtstroʊk/"},
+"come":{level:"basic"},
+"across":{level:"watch",br:"/əˈkrɒs/",us:"/əˈkrɔːs/"},
+"take":{level:"basic"},
+"the":{level:"basic"},
+"stretcher":{level:"tricky",br:"/ˈstretʃə/",us:"/ˈstretʃər/"},
+"over":{level:"basic"},
+"to":{level:"basic"},
+"them":{level:"basic"},
+"into":{level:"watch",br:"/ˈɪntə/",us:"/ˈɪntuː/"},
+"ice":{level:"basic"},
+"packs":{level:"watch",br:"/pæks/",us:"/pæks/"},
+"horribly":{level:"tricky",br:"/ˈhɒrəbli/",us:"/ˈhɔːrəbli/"},
+"wrong":{level:"watch",br:"/rɒŋ/",us:"/rɔːŋ/"},
+"deliver":{level:"watch",br:"/dɪˈlɪvə/",us:"/dɪˈlɪvər/"},
+"off":{level:"watch",br:"/ɒf/",us:"/ɔːf/"},
+"with":{level:"watch",br:"/wɪð/",us:"/wɪð/"},
+"lukewarm":{level:"tricky",br:"/ˈluːkwɔːm/",us:"/ˈluːkwɔːrm/"},
+"water":{level:"watch",br:"/ˈwɔːtə/",us:"/ˈwɔːtər/"},
+"fan":{level:"basic"},
+"fluids":{level:"watch",br:"/ˈfluːɪdz/",us:"/ˈfluːɪdz/"},
+"vulnerable":{level:"tricky",br:"/ˈvʌlnərəbl/",us:"/ˈvʌlnərəbl/"},
+"direct":{level:"watch",br:"/dɪˈrekt/",us:"/dɪˈrekt/"},
+"sunlight":{level:"basic"},
+"overheating":{level:"tricky",br:"/ˌəʊvəˈhiːtɪŋ/",us:"/ˌoʊvərˈhiːtɪŋ/"},
+"clip-on":{level:"watch",br:"/ˈklɪp ɒn/",us:"/ˈklɪp ɑːn/"},
+"parasol":{level:"tricky",br:"/ˈpærəsɒl/",us:"/ˈpærəsɔːl/"},
+"airflow":{level:"watch",br:"/ˈeəfləʊ/",us:"/ˈerfloʊ/"},
+"sling":{level:"watch",br:"/slɪŋ/",us:"/slɪŋ/"},
+"count":{level:"basic"},
+"as":{level:"basic"},
+"natural":{level:"watch",br:"/ˈnætʃrəl/",us:"/ˈnætʃərəl/"},
+"breathable":{level:"tricky",br:"/ˈbriːðəbl/",us:"/ˈbriːðəbl/"}
+};
+
+const key="real_note_workflow_v6_20260803_apple";
+let state=JSON.parse(localStorage.getItem(key)||"null")||{cards:initialCards.map((c,i)=>({...c,id:i+1,status:"new"})),index:0,flipped:false,type:"all",ans:"all"};
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(key,JSON.stringify(state));}
+function stripTask(t,task){return t.startsWith(task)?t.substring(task.length).replace(/^\n+/,""):t;}
+
+function speak(text,lang){
+  if(!("speechSynthesis"in window))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=lang;u.rate=0.8;
+  const vs=window.speechSynthesis.getVoices();
+  const v=vs.find(v=>v.lang===lang);
+  if(v)u.voice=v;
+  window.speechSynthesis.speak(u);
+}
+
+/* Build per-word pronunciation HTML for the answer */
+function buildAnswerPron(answer){
+  if(!answer)return"";
+  const words=answer.split(/\s+/);
+  let html='<div class="ans-words">';
+  words.forEach(w=>{
+    const clean=w.replace(/[,/]/g,"").trim().toLowerCase();
+    const wd=wordData[clean];
+    if(wd&&wd.level!=="basic"){
+      const cls=wd.level;
+      html+=`<span class="aw"><span class="aw-top"><span class="aw-word ${cls}">${w}</span><button class="aw-speak" data-lang="en-US" data-text="${clean}">🔊</button></span><span class="aw-ipa ${cls}">${wd.br} <span style="color:#C7C7CC">|</span> ${wd.us}</span></span>`;
+    }else{
+      html+=`<span class="aw"><span class="aw-top"><span class="aw-word">${w}</span><button class="aw-speak" data-lang="en-US" data-text="${clean}">🔊</button></span></span>`;
+    }
+  });
+  html+="</div>";
+  return html;
+}
+
+/* Parse back content into sections */
+function buildBackHTML(c){
+  const answer=c.answer||function(){const m=c.back.match(/Answer：(.+?)(?:<br>|$)/);return m?m[1].trim():"";}();
+  const parts=c.back.split(/<br><br>/);
+  let html=buildAnswerPron(answer);
+  parts.forEach(p=>{
+    if(p.startsWith("Example："))html+=`<div class="back-section"><div class="back-label">Example</div><div>${p.replace(/^Example：/,"")}</div></div>`;
+    else if(p.startsWith("Usage note："))html+=`<div class="back-section"><div class="back-label">Usage note</div><div>${p.replace(/^Usage note：/,"")}</div></div>`;
+    else if(p.startsWith("中文确认："))html+=`<div class="back-section"><div class="back-label">中文确认</div><div>${p.replace(/^中文确认：/,"")}</div></div>`;
+  });
+  return html;
+}
+
+function filtered(){return state.cards.filter(c=>c.status!=="deleted"&&(state.type==="all"||c.type===state.type)&&(state.ans==="all"||c.answertype===state.ans));}
+function current(){const v=filtered();if(!v.length)return null;if(state.index>=v.length)state.index=v.length-1;if(state.index<0)state.index=0;return v[state.index];}
+
+function render(){
+  $("typeFilter").value=state.type;$("ansFilter").value=state.ans;
+  const v=filtered(),c=current();
+  $("known").textContent=state.cards.filter(x=>x.status==="known").length;
+  $("hard").textContent=state.cards.filter(x=>x.status==="hard").length;
+  $("deleted").textContent=state.cards.filter(x=>x.status==="deleted").length;
+  $("pos").textContent=c?`${state.index+1}/${v.length}`:"0/0";
+  if(!c){$("front").textContent="No cards match the current filter";$("backInner").innerHTML="";$("taskBadge").textContent="";$("meta").innerHTML="";return;}
+  $("meta").innerHTML=[c.topic,c.type,c.prompt,c.answertype].map((x,i)=>`<span class="tag ${i===0?"gray":i===3?"amber":""}">${x}</span>`).join("");
+  $("taskBadge").textContent=c.task;
+  $("front").textContent=stripTask(c.front,c.task);
+  $("backInner").innerHTML=buildBackHTML(c);
+  $("back").classList.toggle("show",state.flipped);
+  $("flip").textContent=state.flipped?"Hide Answer":"Show Answer";
+  $("frontEdit").value=stripTask(c.front,c.task);
+  $("backEdit").value=c.back.replace(/<br>/g,"\n");
+  save();
+}
+
+function move(d){
+  const card=$("card");
+  card.classList.add("fade");
+  setTimeout(()=>{
+    state.index+=d;state.flipped=false;render();
+    card.classList.remove("fade");
+  },180);
+}
+
+$("typeFilter").onchange=e=>{state.type=e.target.value;state.index=0;state.flipped=false;render();};
+$("ansFilter").onchange=e=>{state.ans=e.target.value;state.index=0;state.flipped=false;render();};
+$("flip").onclick=()=>{state.flipped=!state.flipped;render();};
+$("nextBtn").onclick=()=>move(1);
+$("prevBtn").onclick=()=>move(-1);
+$("knownBtn").onclick=()=>{const c=current();if(c)c.status="known";move(1);};
+$("hardBtn").onclick=()=>{const c=current();if(c)c.status="hard";move(1);};
+$("deleteBtn").onclick=()=>{const c=current();if(c)c.status="deleted";state.flipped=false;render();};
+$("editBtn").onclick=()=>$("editor").classList.toggle("hidden");
+$("saveBtn").onclick=()=>{const c=current();if(!c)return;c.front=$("frontEdit").value.trim();c.back=$("backEdit").value.trim().replace(/\n/g,"<br>");$("editor").classList.add("hidden");render();};
+$("resetBtn").onclick=()=>{localStorage.removeItem(key);state={cards:initialCards.map((c,i)=>({...c,id:i+1,status:"new"})),index:0,flipped:false,type:"all",ans:"all"};render();};
+$("exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(state.cards,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="review_export.json";a.click();URL.revokeObjectURL(url);};
+
+/* Delegate click for speak buttons inside back area */
+document.addEventListener("click",e=>{
+  if(e.target.classList.contains("aw-speak")){
+    speak(e.target.dataset.text,e.target.dataset.lang);
+  }
+});
+
+/* Preload voices */
+if("speechSynthesis"in window){window.speechSynthesis.onvoiceschanged=()=>{};}
+
+/* Register Service Worker for PWA offline support */
+if("serviceWorker"in navigator){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+
+render();
+</script>
+</html>
