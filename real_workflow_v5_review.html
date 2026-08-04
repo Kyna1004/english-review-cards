@@ -103,6 +103,30 @@ button.act:active{transform:scale(0.96)}
 .editor{margin-top:16px;padding-top:16px;border-top:1px solid #F2F2F7}
 .editor textarea{width:100%;min-height:80px;border:1px solid #D1D1D6;border-radius:10px;padding:10px;font:inherit;line-height:1.5;font-size:15px;resize:vertical}
 
+
+/* Deck switcher */
+.deck-bar{display:flex;gap:8px;margin-bottom:16px}
+.deck-btn{flex:1;border:1.5px solid #E5E5EA;background:#fff;color:#86868B;border-radius:12px;padding:10px 14px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s ease;text-align:center}
+.deck-btn.active{border-color:#007AFF;color:#007AFF;background:#F0F7FF}
+.deck-btn .deck-count{font-size:12px;font-weight:400;margin-top:2px;color:#86868B}
+.deck-btn.active .deck-count{color:#007AFF}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s ease}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:20px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:0 8px 40px rgba(0,0,0,0.2);transform:scale(0.95);transition:transform .2s ease}
+.modal-overlay.show .modal{transform:scale(1)}
+.modal-title{font-size:20px;font-weight:700;margin:0 0 4px}
+.modal-sub{color:#86868B;font-size:14px;margin-bottom:16px}
+.modal textarea{width:100%;min-height:200px;border:1px solid #D1D1D6;border-radius:12px;padding:12px;font:inherit;font-size:14px;line-height:1.5;resize:vertical;font-family:monospace}
+.modal-tabs{display:flex;gap:0;margin-bottom:16px;background:#F5F5F7;border-radius:10px;padding:3px}
+.modal-tab{flex:1;border:0;background:transparent;color:#86868B;font-size:14px;font-weight:600;padding:8px;border-radius:8px;cursor:pointer;transition:all .2s ease}
+.modal-tab.active{background:#fff;color:#1D1D1F;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
+.modal-actions button{flex:1}
+.modal-hint{font-size:13px;color:#86868B;line-height:1.6;margin-top:8px}
+.modal-hint code{background:#F5F5F7;padding:2px 6px;border-radius:4px;font-size:12px}
+
 @media(max-width:560px){
 .app{padding:20px 12px 40px}
 h1{font-size:24px}
@@ -120,6 +144,11 @@ h1{font-size:24px}
 <div class="mode-toggle">
 <button id="modeStudy">Study</button>
 <button id="modeReview" class="active">Review</button>
+</div>
+
+<div class="deck-bar">
+<button class="deck-btn active" id="deckSample">Sample Deck<div class="deck-count" id="sampleCount">0 cards</div></button>
+<button class="deck-btn" id="deckMine">My Deck<div class="deck-count" id="mineCount">0 cards</div></button>
 </div>
 
 <div class="progress-bar" id="progressBar" style="display:none"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
@@ -166,10 +195,52 @@ h1{font-size:24px}
 </div>
 
 <div class="bottom-bar">
-<button class="act btn-ghost" id="resetBtn">Reset all</button>
-<button class="act btn-ghost" id="exportBtn">Copy for AI</button>
+<button class="act btn-ghost" id="importBtn">Import</button>
+<button class="act btn-ghost" id="exportBtn">Export</button>
+<button class="act btn-ghost" id="resetBtn">Reset</button>
 </div>
 <p class="note" id="bottomNote">Swipe right = got it. Swipe left = hard. Tap card to flip.</p>
+</div>
+
+<!-- Import Modal -->
+<div class="modal-overlay" id="importModal">
+<div class="modal">
+<div class="modal-title">Import Cards</div>
+<div class="modal-sub">Add your own notes to My Deck</div>
+<div class="modal-tabs">
+<button class="modal-tab active" id="tabJson">JSON</button>
+<button class="modal-tab" id="tabText">Text Notes</button>
+</div>
+<div id="importJsonPanel">
+<textarea id="importJsonInput" placeholder='Paste JSON array of cards here. Each card needs at least "front" and "answer" fields.
+
+Example:
+[
+  {
+    "front": "Fill in the blank.\nThe weather is ______ today.",
+    "answer": "gorgeous",
+    "topic": "Daily English",
+    "type": "Phrase",
+    "answertype": "word"
+  }
+]'></textarea>
+</div>
+<div id="importTextPanel" style="display:none">
+<textarea id="importTextInput" placeholder="Paste your notes here. One card per line.
+
+Format: answer | question | topic (optional)
+
+Examples:
+gorgeous | How to describe beautiful weather? | Daily English
+hit different | Something feels special or different | Slang
+come across | Meet or find by chance | Phrases"></textarea>
+</div>
+<div class="modal-hint" id="importHint">Tip: Use Export to copy your current deck, or paste JSON from Gemini after generating study content.</div>
+<div class="modal-actions">
+<button class="act btn-ghost" id="importCancelBtn">Cancel</button>
+<button class="act btn-blue" id="importConfirmBtn">Import</button>
+</div>
+</div>
 </div>
 
 <script>
@@ -326,11 +397,16 @@ const wordData={
 "span":{level:"watch",br:"/spæn/",us:"/spæn/"}
 };
 
-const key="real_note_workflow_v12_20260804_minimal_ui";
+const DECK_SAMPLE="sample",DECK_MINE="mine";
+const SAMPLE_KEY="real_note_workflow_v12_sample_20260804";
+const MINE_KEY="real_note_workflow_v12_mine_20260804";
+let activeDeck=localStorage.getItem("activeDeck")||DECK_SAMPLE;
+let key=activeDeck===DECK_MINE?MINE_KEY:SAMPLE_KEY;
 let saved=JSON.parse(localStorage.getItem(key)||"null");
 let state=saved||{cards:initialCards.map((c,i)=>({...c,id:i+1,status:"new",studied:false})),index:0,flipped:false,type:"all",ans:"all",dateFilter:"all",mode:"review"};
 if(!saved||!saved.mode){state.mode=state.mode||"review";if(saved){saved.mode="review";state=saved;}}
 if(!state.dateFilter)state.dateFilter="all";
+if(!state.cards)state.cards=initialCards.map((c,i)=>({...c,id:i+1,status:"new",studied:false}));
 const $=id=>document.getElementById(id);
 function save(){localStorage.setItem(key,JSON.stringify(state));}
 function stripTask(front,task){if(!task)return front;const t=task.replace(/\.$/,"");if(front.startsWith(task+"\n"))return front.slice(task.length+1);if(front.startsWith(task+" "))return front.slice(task.length+1);return front;}
@@ -473,6 +549,7 @@ function render(){
 
   $("frontEdit").value=stripTask(c.front,c.task);
   $("backEdit").value=c.back.replace(/<br>/g,"\n");
+  updateDeckCounts();
   save();
 }
 
@@ -566,30 +643,16 @@ $("speakAllBtn").onclick=()=>{const c=current();if(c)speakFullCard(c);};
 $("studyNextBtn").onclick=()=>move(1);
 $("studyPrevBtn").onclick=()=>move(-1);
 
-$("resetBtn").onclick=()=>{localStorage.removeItem(key);state={cards:initialCards.map((c,i)=>({...c,id:i+1,status:"new",studied:false})),index:0,flipped:false,type:"all",ans:"all",dateFilter:"all",mode:"review"};render();};
-$("exportBtn").onclick=()=>{
-  const topics=[...new Set(state.cards.filter(c=>c.status!=="deleted").map(c=>c.topic))];
-  let text="My English learning notes\nPlease help me study these notes one by one, don't skip any:\n\n";
-  topics.forEach(topic=>{
-    const cards=state.cards.filter(c=>c.topic===topic&&c.status!=="deleted");
-    text+=`\n【${topic}】(${cards.length} cards)\n`;
-    cards.forEach((c,i)=>{
-      const ans=c.answer||"";
-      const exM=c.back.match(/Example：(.+?)(?:<br>|$)/);
-      const ex=exM?exM[1].replace(/<[^>]+>/g,""):"";
-      const cnM=c.back.match(/中文确认：(.+?)(?:<br>|$)/);
-      const cn=cnM?cnM[1]:"";
-      text+=`${i+1}. ${ans}${cn?" — "+cn:""}${ex?"\n   Example: "+ex:""}\n`;
-    });
-  });
-  navigator.clipboard.writeText(text).then(()=>{
-    $("exportBtn").textContent="Copied!";
-    setTimeout(()=>{$("exportBtn").textContent="Copy for AI";},2000);
-  }).catch(()=>{
-    const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);
-    $("exportBtn").textContent="Copied!";
-    setTimeout(()=>{$("exportBtn").textContent="Copy for AI";},2000);
-  });
+$("resetBtn").onclick=()=>{
+  if(!confirm("Reset current deck? All progress will be lost."))return;
+  localStorage.removeItem(key);
+  if(activeDeck===DECK_MINE){
+    state={cards:[],index:0,flipped:false,type:"all",ans:"all",dateFilter:"all",mode:"review"};
+  }else{
+    state={cards:initialCards.map((c,i)=>({...c,id:i+1,status:"new",studied:false})),index:0,flipped:false,type:"all",ans:"all",dateFilter:"all",mode:"review"};
+  }
+  render();
+  updateDeckCounts();
 };
 
 /* Delegate click for speak buttons */
@@ -608,6 +671,146 @@ if("serviceWorker"in navigator){
   navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
 
+/* Deck switching */
+function switchDeck(deck){
+  activeDeck=deck;
+  localStorage.setItem("activeDeck",deck);
+  key=deck===DECK_MINE?MINE_KEY:SAMPLE_KEY;
+  saved=JSON.parse(localStorage.getItem(key)||"null");
+  if(saved){
+    state=saved;
+  }else if(deck===DECK_MINE){
+    state={cards:[],index:0,flipped:false,type:"all",ans:"all",dateFilter:"all",mode:"review"};
+  }else{
+    state={cards:initialCards.map((c,i)=>({...c,id:i+1,status:"new",studied:false})),index:0,flipped:false,type:"all",ans:"all",dateFilter:"all",mode:"review"};
+  }
+  if(!state.dateFilter)state.dateFilter="all";
+  state.index=0;state.flipped=false;
+  render();
+}
+
+$("deckSample").onclick=()=>switchDeck(DECK_SAMPLE);
+$("deckMine").onclick=()=>switchDeck(DECK_MINE);
+
+/* Import modal */
+$("importBtn").onclick=()=>{
+  if(activeDeck!==DECK_MINE){switchDeck(DECK_MINE);}
+  $("importModal").classList.add("show");
+};
+$("importCancelBtn").onclick=()=>$("importModal").classList.remove("show");
+$("importModal").onclick=e=>{if(e.target===$("importModal"))$("importModal").classList.remove("show");};
+
+$("tabJson").onclick=()=>{$("tabJson").classList.add("active");$("tabText").classList.remove("active");$("importJsonPanel").style.display="block";$("importTextPanel").style.display="none";};
+$("tabText").onclick=()=>{$("tabText").classList.add("active");$("tabJson").classList.remove("active");$("importTextPanel").style.display="block";$("importJsonPanel").style.display="none";};
+
+$("importConfirmBtn").onclick=()=>{
+  let newCards=[];
+  const isJson=$("tabJson").classList.contains("active");
+  const input=isJson?$("importJsonInput").value:$("importTextInput").value;
+
+  if(!input.trim()){$("importHint").textContent="Please paste your content first.";return;}
+
+  if(isJson){
+    try{
+      const parsed=JSON.parse(input);
+      if(!Array.isArray(parsed)){throw new Error("Not an array");}
+      newCards=parsed.map((c,i)=>({
+        front:c.front||"",
+        back:c.back||"",
+        answer:c.answer||"",
+        topic:c.topic||"Imported",
+        type:c.type||"短语表达卡",
+        answertype:c.answertype||"word",
+        task:c.task||"",
+        priority:c.priority||"",
+        date:c.date||new Date().toISOString().slice(0,10),
+        study:c.study||null,
+        id:state.cards.length+i+1,
+        status:"new",
+        studied:false
+      }));
+    }catch(e){
+      $("importHint").textContent="JSON parse error: "+e.message;
+      return;
+    }
+  }else{
+    /* Parse text notes: answer | question | topic */
+    const lines=input.trim().split("\n").filter(l=>l.trim());
+    newCards=lines.map((line,i)=>{
+      const parts=line.split("|").map(p=>p.trim());
+      const answer=parts[0]||"";
+      const question=parts[1]||"What does this mean?";
+      const topic=parts[2]||"Imported";
+      return{
+        front:question,
+        back:"Answer："+answer,
+        answer:answer,
+        topic:topic,
+        type:"短语表达卡",
+        answertype:answer.split(" ").length>1?"phrase":"word",
+        task:"Recall.",
+        priority:"",
+        date:new Date().toISOString().slice(0,10),
+        study:null,
+        id:state.cards.length+i+1,
+        status:"new",
+        studied:false
+      };
+    });
+  }
+
+  if(newCards.length===0){$("importHint").textContent="No valid cards found.";return;}
+
+  /* Merge with existing my deck cards */
+  state.cards=state.cards.concat(newCards);
+  save();
+  $("importModal").classList.remove("show");
+  $("importJsonInput").value="";
+  $("importTextInput").value="";
+  $("importHint").textContent="Imported "+newCards.length+" cards. Use Export to copy for AI study content generation.";
+  render();
+};
+
+/* Export: copy current deck as JSON or AI study format */
+$("exportBtn").onclick=()=>{
+  const cards=state.cards.filter(c=>c.status!=="deleted");
+  if(cards.length===0){$("exportBtn").textContent="Empty!";setTimeout(()=>$("exportBtn").textContent="Export",2000);return;}
+
+  /* Copy as JSON for backup/transfer */
+  const exportData=JSON.stringify(cards.map(c=>({
+    front:c.front,
+    back:c.back,
+    answer:c.answer,
+    topic:c.topic,
+    type:c.type,
+    answertype:c.answertype,
+    task:c.task,
+    priority:c.priority,
+    date:c.date,
+    study:c.study
+  })),null,2);
+
+  navigator.clipboard.writeText(exportData).then(()=>{
+    $("exportBtn").textContent="Copied "+cards.length+" cards!";
+    setTimeout(()=>{$("exportBtn").textContent="Export";},2000);
+  }).catch(()=>{
+    const ta=document.createElement("textarea");ta.value=exportData;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);
+    $("exportBtn").textContent="Copied "+cards.length+" cards!";
+    setTimeout(()=>{$("exportBtn").textContent="Export";},2000);
+  });
+};
+
+/* Update deck counts in render */
+function updateDeckCounts(){
+  $("sampleCount").textContent=(initialCards.length)+" cards";
+  const mineData=JSON.parse(localStorage.getItem(MINE_KEY)||"null");
+  const mineCount=mineData&&mineData.cards?mineData.cards.filter(c=>c.status!=="deleted").length:0;
+  $("mineCount").textContent=mineCount+" cards";
+  $("deckSample").classList.toggle("active",activeDeck===DECK_SAMPLE);
+  $("deckMine").classList.toggle("active",activeDeck===DECK_MINE);
+}
+
 render();
+updateDeckCounts();
 </script>
 </html>
