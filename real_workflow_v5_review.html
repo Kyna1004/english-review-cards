@@ -8,48 +8,54 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="English Cards">
-<meta name="theme-color" content="#007AFF">
+<meta name="theme-color" content="#F5F5F7">
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#F5F5F7;color:#1D1D1F;font-family:-apple-system,"SF Pro Display","SF Pro Text","Helvetica Neue","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#F5F5F7;color:#1D1D1F;font-family:-apple-system,"SF Pro Display","SF Pro Text","Helvetica Neue","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased;user-select:none}
 .app{max-width:680px;margin:0 auto;padding:32px 16px 48px}
 h1{font-size:28px;font-weight:700;margin:0 0 4px;letter-spacing:-0.5px}
 .sub{color:#86868B;font-size:15px;margin-bottom:20px}
 
-/* Filters — segmented style */
+/* Mode toggle */
+.mode-toggle{display:flex;gap:0;margin-bottom:16px;background:#E5E5EA;border-radius:12px;padding:3px}
+.mode-toggle button{flex:1;border:0;background:transparent;color:#86868B;font-size:15px;font-weight:600;padding:10px;border-radius:10px;cursor:pointer;transition:all .2s ease}
+.mode-toggle button.active{background:#fff;color:#1D1D1F;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+
+/* Progress bar */
+.progress-bar{height:3px;background:#E5E5EA;border-radius:2px;margin-bottom:16px;overflow:hidden}
+.progress-bar-fill{height:100%;background:#007AFF;border-radius:2px;transition:width .3s ease}
+
+/* Filters */
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 select{border:0;border-radius:10px;padding:8px 14px;background:#fff;color:#1D1D1F;font-size:14px;font-weight:500;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08);appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2386868B' d='M6 8L2 4h8z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
 
-/* Stats — capsule row */
+/* Stats */
 .stats{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
 .stat{background:#fff;border-radius:12px;padding:8px 16px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
 .stat b{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
 .stat span{font-size:12px;color:#86868B;font-weight:500}
+.study-stats .stat{background:#fff}
+.study-stats .stat b{color:#007AFF}
 
-/* Card */
-.card{background:#fff;border-radius:20px;box-shadow:0 2px 16px rgba(0,0,0,0.08);padding:28px 24px;min-height:420px;transition:opacity .3s ease,transform .3s ease}
+/* Card — white, clean, Apple-style */
+.card{background:#fff;border-radius:24px;box-shadow:0 2px 20px rgba(0,0,0,0.06);padding:32px 28px;min-height:400px;transition:opacity .25s ease,transform .25s ease;cursor:pointer;position:relative;overflow:hidden}
 .card.fade{opacity:0;transform:translateY(8px)}
-.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
-.tag{border-radius:8px;padding:4px 10px;font-size:12px;font-weight:500;background:#F5F5F7;color:#6E6E73}
-.tag.gray{background:#F5F5F7;color:#86868B}
-.tag.amber{background:#FFF4E6;color:#C2410C}
 
-/* Task badge */
-.task-badge{display:inline-block;background:#007AFF;color:#fff;border-radius:8px;padding:6px 14px;font-size:14px;font-weight:600;margin-bottom:14px}
+/* Swipe indicators */
+.card-swipe-left{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(255,59,48,0.08);display:flex;align-items:center;justify-content:flex-start;padding-left:32px;font-size:16px;font-weight:600;color:#FF3B30;opacity:0;transition:opacity .15s ease;pointer-events:none}
+.card-swipe-right{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(52,199,89,0.08);display:flex;align-items:center;justify-content:flex-end;padding-right:32px;font-size:16px;font-weight:600;color:#34C759;opacity:0;transition:opacity .15s ease;pointer-events:none}
 
 /* Front */
-.label{color:#86868B;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 8px}
-.front{white-space:pre-line;font-size:21px;line-height:1.6;font-weight:600;margin-bottom:20px;color:#1D1D1F}
+.front{white-space:pre-line;font-size:22px;line-height:1.5;font-weight:500;color:#1D1D1F}
 
-/* Show Answer button */
-.flip-btn{display:block;width:100%;border:0;border-radius:14px;padding:14px;font-size:16px;font-weight:600;background:#007AFF;color:#fff;cursor:pointer;transition:transform .12s ease,opacity .12s ease;margin-bottom:0}
-.flip-btn:active{transform:scale(0.97);opacity:0.85}
+/* Show Answer hint */
+.flip-hint{text-align:center;color:#86868B;font-size:13px;margin-top:24px;font-weight:400}
 
 /* Back */
 .back{overflow:hidden;max-height:0;opacity:0;transition:max-height .35s ease,opacity .25s ease}
-.back.show{max-height:800px;opacity:1}
-.back-inner{border-top:1px solid #F2F2F7;margin-top:16px;padding-top:16px;font-size:16px;line-height:1.7}
-.back-section{margin-bottom:12px}
+.back.show{max-height:1200px;opacity:1}
+.back-inner{border-top:1px solid #F2F2F7;margin-top:20px;padding-top:20px;font-size:16px;line-height:1.7}
+.back-section{margin-bottom:14px}
 .back-section:last-child{margin-bottom:0}
 .back-label{color:#86868B;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
 
@@ -62,25 +68,29 @@ select{border:0;border-radius:10px;padding:8px 14px;background:#fff;color:#1D1D1
 .aw-word.watch{color:#FF9500}
 .aw-speak{border:0;background:#F5F5F7;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;transition:background .12s ease,transform .12s ease;flex-shrink:0}
 .aw-speak:hover{background:#E5E5EA}
-.aw-speak:active{transform:scale(0.85);background:#007AFF}
+.aw-speak:active{transform:scale(0.85);background:#007AFF;color:#fff}
 .aw-ipa{font-size:13px;color:#86868B;font-weight:400;padding-left:2px}
 .aw-ipa.tricky{color:#007AFF}
 .aw-ipa.watch{color:#FF9500}
 
-/* Controls */
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-.card-controls{grid-template-columns:repeat(3,1fr)}
-button.act{border:0;border-radius:22px;padding:13px 12px;font-size:15px;font-weight:600;cursor:pointer;transition:transform .12s ease,opacity .12s ease;min-height:44px;display:flex;align-items:center;justify-content:center}
-button.act:active{transform:scale(0.96)}
-.btn-good{background:#34C759;color:#fff}
-.btn-hard{background:#FF9500;color:#fff}
-.btn-danger{background:#FF3B30;color:#fff}
-.btn-ghost{background:#E5E5EA;color:#1D1D1F}
+/* Study content sections */
+.study-section{margin-top:16px}
+.study-section .study-label{color:#86868B;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.study-section .study-content{font-size:16px;line-height:1.7;color:#1D1D1F}
 
-/* Editor */
-.editor{margin-top:16px;padding-top:16px;border-top:1px solid #F2F2F7}
-.editor textarea{width:100%;min-height:80px;border:1px solid #D1D1D6;border-radius:10px;padding:10px;font:inherit;line-height:1.5;font-size:15px;resize:vertical}
-.editor .controls{grid-template-columns:1fr}
+/* Collapsible related expressions */
+.collapsible{cursor:pointer;user-select:none}
+.collapsible .collapse-icon{display:inline-block;transition:transform .2s ease;font-size:12px;color:#86868B;margin-left:4px}
+.collapsible.collapsed .collapse-icon{transform:rotate(-90deg)}
+.collapsible.collapsed + .collapse-body{display:none}
+.collapse-body{margin-top:8px}
+
+/* Study controls */
+.study-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px}
+button.act{border:0;border-radius:16px;padding:14px 12px;font-size:15px;font-weight:600;cursor:pointer;transition:transform .12s ease,opacity .12s ease;min-height:48px;display:flex;align-items:center;justify-content:center}
+button.act:active{transform:scale(0.96)}
+.btn-ghost{background:#E5E5EA;color:#1D1D1F}
+.btn-blue{background:#007AFF;color:#fff}
 
 /* Bottom bar */
 .bottom-bar{display:flex;gap:10px;margin-top:20px}
@@ -89,44 +99,15 @@ button.act:active{transform:scale(0.96)}
 .note{font-size:13px;color:#86868B;line-height:1.6;margin-top:20px;text-align:center}
 .hidden{display:none}
 
-/* Mode toggle */
-.mode-toggle{display:flex;gap:0;margin-bottom:16px;background:#E5E5EA;border-radius:12px;padding:3px}
-.mode-toggle button{flex:1;border:0;background:transparent;color:#86868B;font-size:15px;font-weight:600;padding:10px;border-radius:10px;cursor:pointer;transition:all .2s ease}
-.mode-toggle button.active{background:#fff;color:#007AFF;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
-
-/* Study mode */
-.study-stats{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.study-stats .stat{background:#E8F4FF}
-.study-stats .stat b{color:#007AFF}
-
-.card.study-mode{background:#F0F7FF;border:2px solid #007AFF33}
-.card.study-mode .back{max-height:800px;opacity:1;transition:none}
-.card.study-mode .flip-btn{display:none}
-
-.study-controls{grid-template-columns:1fr 1fr 1fr!important}
-
-.progress-bar{height:4px;background:#E5E5EA;border-radius:2px;margin-bottom:16px;overflow:hidden}
-.progress-bar-fill{height:100%;background:#007AFF;border-radius:2px;transition:width .3s ease}
-
-/* Study content sections */
-.study-section{margin-top:14px;padding:12px 14px;border-radius:12px;background:#F8FBFF}
-.study-section .study-label{color:#007AFF;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.study-section .study-content{font-size:15px;line-height:1.7;color:#1D1D1F}
-.study-section .study-content em{color:#86868B;font-style:normal;font-size:13px}
-
-/* Collapsible related expressions */
-.collapsible{cursor:pointer;user-select:none}
-.collapsible .collapse-icon{display:inline-block;transition:transform .2s ease;font-size:12px;color:#86868B}
-.collapsible.collapsed .collapse-icon{transform:rotate(-90deg)}
-.collapsible.collapsed + .collapse-body{display:none}
-.collapse-body{margin-top:8px;padding-top:8px;border-top:1px solid #E5E5EA}
+/* Editor */
+.editor{margin-top:16px;padding-top:16px;border-top:1px solid #F2F2F7}
+.editor textarea{width:100%;min-height:80px;border:1px solid #D1D1D6;border-radius:10px;padding:10px;font:inherit;line-height:1.5;font-size:15px;resize:vertical}
 
 @media(max-width:560px){
 .app{padding:20px 12px 40px}
 h1{font-size:24px}
-.card{padding:20px 16px;border-radius:16px}
-.front{font-size:19px}
-.card-controls{grid-template-columns:repeat(3,1fr)}
+.card{padding:24px 20px;border-radius:20px}
+.front{font-size:20px}
 .stats{gap:6px}
 .stat{padding:6px 12px}
 }
@@ -137,8 +118,8 @@ h1{font-size:24px}
 <p class="sub">Trust the process</p>
 
 <div class="mode-toggle">
-<button id="modeStudy">📖 Study</button>
-<button id="modeReview" class="active">🔄 Review</button>
+<button id="modeStudy">Study</button>
+<button id="modeReview" class="active">Review</button>
 </div>
 
 <div class="progress-bar" id="progressBar" style="display:none"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
@@ -165,31 +146,22 @@ h1{font-size:24px}
 </div>
 
 <div class="card" id="card">
-<div class="meta" id="meta"></div>
-<div class="task-badge" id="taskBadge"></div>
-<div class="label">Front</div>
+<div class="card-swipe-left" id="swipeLeftHint">Hard</div>
+<div class="card-swipe-right" id="swipeRightHint">Got it</div>
 <div class="front" id="front"></div>
-<button class="flip-btn" id="flip">Show Answer</button>
 <div class="back" id="back"><div class="back-inner" id="backInner"></div></div>
-<div class="controls card-controls" id="reviewControls">
-<button class="act btn-good" id="knownBtn">Got it</button>
-<button class="act btn-hard" id="hardBtn">Hard</button>
-<button class="act btn-danger" id="deleteBtn">Delete</button>
-<button class="act btn-ghost" id="editBtn">Edit</button>
-<button class="act btn-ghost" id="prevBtn">Previous</button>
-<button class="act btn-ghost" id="nextBtn">Next</button>
-</div>
+<div class="flip-hint" id="flipHint">Tap to flip</div>
 <div class="controls study-controls hidden" id="studyControls">
-<button class="act btn-ghost" id="studyPrevBtn">← Previous</button>
-<button class="act btn-speak-all" id="speakAllBtn" style="background:#007AFF;color:#fff">🔊 Read aloud</button>
-<button class="act btn-ghost" id="studyNextBtn">Next →</button>
+<button class="act btn-ghost" id="studyPrevBtn">Previous</button>
+<button class="act btn-blue" id="speakAllBtn">Read aloud</button>
+<button class="act btn-ghost" id="studyNextBtn">Next</button>
 </div>
 <div class="editor hidden" id="editor">
-<div class="label">Edit front</div>
+<div class="back-label">Edit front</div>
 <textarea id="frontEdit"></textarea>
-<div class="label" style="margin-top:10px">Edit back</div>
+<div class="back-label" style="margin-top:10px">Edit back</div>
 <textarea id="backEdit"></textarea>
-<div class="controls"><button class="act flip-btn" id="saveBtn" style="background:#007AFF;color:#fff">Save</button></div>
+<div style="margin-top:10px"><button class="act btn-blue" id="saveBtn">Save</button></div>
 </div>
 </div>
 
@@ -197,13 +169,11 @@ h1{font-size:24px}
 <button class="act btn-ghost" id="resetBtn">Reset all</button>
 <button class="act btn-ghost" id="exportBtn">Copy for AI</button>
 </div>
-<p class="note">Blue words = tricky (irregular spelling). Orange words = watch (easy to mispronounce). Tap any word's speaker to hear it individually.</p>
+<p class="note" id="bottomNote">Swipe right = got it. Swipe left = hard. Tap card to flip.</p>
 </div>
 
 <script>
 const initialCards=[{"front":"Recall a short phrase.\nIn heat-related illness, which condition comes after heat cramps but before heatstroke?","back":"Answer：heat exhaustion<br><br>Example：If someone has heat exhaustion, move them into the shade and help them cool down.<br><br>Usage note：Remember the rough order: heat cramps → heat exhaustion → heatstroke.<br><br>中文确认：中暑衰竭 / 热衰竭。","type":"话题词汇卡","prompt":"topic_context","answertype":"phrase","task":"Recall a short phrase.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"heat exhaustion","study":{"meaning":"热衰竭/中暑衰竭，因长时间暴露在高温下导致体内水盐大量流失，身体机能严重耗竭。","related":"heat cramps（热痉挛）、heatstroke（热射病）、heat fatigue、dehydration（脱水）","context":"医学急救场景用语，描述中暑三阶段中的中间阶段。常与 suffer from、treat、prevent 搭配。","expand":"记住热相关疾病严重程度递进：heat cramps → heat exhaustion → heatstroke。exhaustion 源自动词 exhaust（耗尽），指身体能量被耗尽。"}},{"front":"Fill in one word.\nWhich word refers to the most dangerous heat-related condition: heat cramps, heat exhaustion, or ______?","back":"Answer：heatstroke<br><br>Example：Heatstroke is a medical emergency.<br><br>Usage note：Use this word for the most serious condition in the group.<br><br>中文确认：热射病 / 严重中暑。","type":"话题词汇卡","prompt":"contrast","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"heatstroke","study":{"meaning":"热射病/重度中暑，最危险的高温急症，体温调节中枢失效，可危及生命。","related":"sunstroke（日射病）、heat exhaustion（热衰竭）、heat cramps（热痉挛）、hyperthermia（体温过高）","context":"医疗急救语境，指最严重的高温急症，属于正式医学用语。常说 a medical emergency。","expand":"stroke 此处指「突发\"，如 sunstroke（日射病）；stroke 还可指中风（brain stroke）、游泳姿势（breaststroke 蛙泳）。"}},{"front":"Fill in the blank with a short phrase.\nIf you ______ someone with heat exhaustion, move them into the shade.","back":"Answer：come across<br><br>Example：If you come across someone with heat exhaustion, move them into the shade.<br><br>Usage note：come across = find or meet someone/something by chance.<br><br>中文确认：偶然遇到 / 发现。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in the blank with a short phrase.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"come across","study":{"meaning":"偶然遇到/无意中发现某人或某物，强调意外性而非刻意寻找。","related":"stumble upon、chance upon、happen upon、run into","context":"口语和书面均可使用，常用于描述偶遇某人或发现某物。反义表达为 deliberately seek out（刻意寻找）。","expand":"come across 还可指「给人某种印象\"：He comes across as confident（他给人自信的印象）。也可指找到旧物：came across an old photo（翻到一张老照片）。"}},{"front":"Say a short phrase aloud.\nParamedics need to bring the stretcher to the person. Say the action phrase with \"stretcher\".","back":"Answer：take the stretcher over to them<br><br>Example：They took the stretcher over to them.<br><br>Usage note：take ... over to someone = bring something to where someone is.<br><br>中文确认：把担架拿过去给他们。","type":"短语表达卡","prompt":"scenario_recall","answertype":"phrase","task":"Say a short phrase aloud.","priority":"熟悉","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"take the stretcher over to them","study":{"meaning":"把担架拿过去给他们，描述将急救设备送到伤者所在位置的动作。","related":"bring the stretcher to them、carry the stretcher、wheel the stretcher over","context":"急救现场口语指令，take 强调把物品从说话者位置移向对方。","expand":"bring vs take：bring 朝说话者方向带来，take 远离说话者拿走。take ... over to：take the meds over to the patient（把药拿给病人）。"}},{"front":"Fill in one word.\nMove them ______ the shade as soon as possible.","back":"Answer：into<br><br>Example：Move them into the shade as soon as possible.<br><br>Usage note：into the shade focuses on the movement; in the shade focuses on the final position.<br><br>中文确认：把他们移到阴凉处。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"into","study":{"meaning":"进入/到...里面，介词，强调从外到内的移动过程和方向。","related":"in（强调位置状态）、onto（到...上面）、out of（从...出来，反义）","context":"描述移动方向时常用，move/put/go into 为常见搭配。注意 into 侧重移动过程，in 侧重最终位置。","expand":"into vs in：move into the shade（移入阴凉处，强调过程）vs sit in the shade（坐在阴凉处，强调状态）。into 还可表变化：turn into（变成）、transform into（转化为）。"}},{"front":"Recall a short phrase.\nWhat can you use to cool someone down in a heat emergency? Use the phrase for small cold bags.","back":"Answer：ice packs<br><br>Example：Use ice packs to help cool them down.<br><br>Usage note：pack is a noun here: a small bag or pouch.<br><br>中文确认：冰袋。","type":"话题词汇卡","prompt":"topic_context","answertype":"phrase","task":"Recall a short phrase.","priority":"熟悉","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"ice packs","study":{"meaning":"冰袋/冷敷袋，装有冰或制冷凝胶的小袋，用于局部降温、消肿止痛。","related":"cold compress（冷敷布）、gel pack（凝胶袋）、hot water bottle（热水袋）、cooling pad","context":"急救和日常护理用语，复数形式常见。常与 use、apply 搭配：apply ice packs to the injury。","expand":"pack 其他含义：a pack of wolves（一群狼）、backpack（背包）。ice 相关搭配：ice cube（冰块）、dry ice（干冰）、ice pack vs ice bag（冰袋的不同说法）。"}},{"front":"Fill in two words to complete the phrase.\nEverything went ______ ______.","back":"Answer：horribly wrong<br><br>Example：Everything went horribly wrong.<br><br>Usage note：This is stronger and more dramatic than went wrong.<br><br>中文确认：事情变得非常糟糕 / 情况急转直下。","type":"句式结构卡","prompt":"sentence_frame","answertype":"phrase","task":"Fill in two words to complete the phrase.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"horribly wrong","study":{"meaning":"极其糟糕/极度出错，形容事情发展到了非常严重的错误地步，强调程度之深。","related":"terribly wrong、disastrously wrong、badly wrong、go awry","context":"口语和书面均可，带有戏剧性和强烈情感色彩，常与 go 连用描述事态急转直下。","expand":"horribly 可修饰多种形容词：horribly mistaken（大错特错）、horribly expensive（贵得离谱）。go wrong = 出问题，go horribly wrong 语气更强烈。"}},{"front":"Fill in one word.\nIn a medical emergency, a device may ______ a shock.","back":"Answer：deliver<br><br>Example：The device can deliver a shock if needed.<br><br>Usage note：deliver can mean give/administer in medical contexts.<br><br>中文确认：实施一次电击 / 给予电击。","type":"短语表达卡","prompt":"collocation","answertype":"word","task":"Fill in one word.","priority":"熟悉","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"deliver","study":{"meaning":"实施/给予，在医学语境中表示给予电击或药物，不同于日常的「递送/交付\"。","related":"administer（给予/施用）、give（给予）、provide（提供）、apply（施加）","context":"医疗专业语境，deliver a shock 指除颤器释放电击。也可说 deliver a baby（接生）、deliver medicine（给药）。","expand":"deliver 日常含义：deliver a package（送包裹）、deliver a speech（发表演讲）、deliver results（交付成果）。一词多义，语境决定含义。"}},{"front":"Fill in one word.\nTake their outer clothes ______ to help them cool down.","back":"Answer：off<br><br>Example：Take their outer clothes off to help them cool down.<br><br>Usage note：take off is the phrasal verb; off is easy to miss.<br><br>中文确认：脱掉他们的外层衣服。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"off","study":{"meaning":"脱下/移除，副词，与 take 连用构成 take off，表示把衣物从身上去掉。","related":"take off（脱下）、put on（穿上，反义）、strip off（全部脱去）、remove（移除，正式）","context":"日常口语和急救场景均可使用，take off 为高频短语动词。off 单独也可表示脱离状态。","expand":"take off 多义：plane takes off（飞机起飞）、take a day off（请假）、take off（突然成功）。off 搭配：cut off（切断）、turn off（关闭）、show off（炫耀）。"}},{"front":"Fill in one word.\nSpray them ______ cold water and fan them.","back":"Answer：with<br><br>Example：Spray them with cold water and fan them.<br><br>Usage note：The pattern is spray someone with water.<br><br>中文确认：用冷水喷他们。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"with","study":{"meaning":"用/以，介词，在此处构成 cover something with something 的固定搭配，表示覆盖所用的材料。","related":"using（使用）、by means of（通过...方式）、wrap with（用...包裹）","context":"描述覆盖或包裹的材料/工具，口语和书面均可。cover/protect/wrap with 为常见固定搭配。","expand":"同类搭配：covered with snow（被雪覆盖）、protect with sunscreen（用防晒霜保护）、wrap with a towel（用毛巾包裹）。with 表材料/工具是其核心用法。"}},{"front":"Recall a short phrase.\nTepid water is not hot or cold. What is a more common English word for this temperature?","back":"Answer：lukewarm water<br><br>Example：You can cool them with tepid water.<br><br>Usage note：tepid and lukewarm both mean mildly warm.<br><br>中文确认：微温水 / 不冷不热的水。","type":"话题词汇卡","prompt":"topic_context","answertype":"phrase","task":"Recall a short phrase.","priority":"熟悉","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"lukewarm water","study":{"meaning":"微温水/温水，指不冷不热、接近体温的水温，适合降温或饮用。","related":"tepid water（微温水，同义）、warm water（温水）、boiling water（沸水，反义）、ice water（冰水，反义）","context":"医疗护理和日常场景，描述适合物理降温或饮用的水温。常与 cool with 搭配。","expand":"lukewarm 还可形容态度冷淡：a lukewarm response（不冷不热的回应）。luke 词源不明，可能与体内平衡状态有关。"}},{"front":"Say a short phrase aloud.\nYou are cooling someone down. You spray them with water and then use moving air. What is the short action phrase?","back":"Answer：fan them<br><br>Example：Fan them while spraying them with water.<br><br>Usage note：fan is a verb here.<br><br>中文确认：给他们扇风。","type":"短语表达卡","prompt":"scenario_recall","answertype":"phrase","task":"Say a short phrase aloud.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"fan them","study":{"meaning":"给他们扇风/用气流帮助他们降温，fan 此处作动词，指用扇子或物体制造气流。","related":"blow air at them、cool them down、wave air at them","context":"急救降温场景口语指令，常与 spray 搭配使用：spray them with water and fan them。","expand":"fan 作名词：hand fan（扇子）、ceiling fan（吊扇）、electric fan（电风扇）。习语：fan the flames（火上浇油）、fan out（展开/分散）。"}},{"front":"Fill in one word or short phrase.\nMake the health advice sound complete:\n\nMake sure you drink plenty of ______.","back":"Answer：water / fluids<br><br>Example：Make sure you drink plenty of water.<br><br>Usage note：drink plenty is understandable, but drink plenty of water is more complete.<br><br>中文确认：多喝水 / 大量饮水。","type":"短语表达卡","prompt":"collocation","answertype":"word","task":"Fill in one word or short phrase.","priority":"熟悉","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"water / fluids","study":{"meaning":"水/液体，在此处指补充水分或体液以防脱水，fluids 在医疗语境中指可饮用的液体。","related":"stay hydrated（保持水分）、oral rehydration（口服补液）、fluids intake（液体摄入）、dehydrated（脱水的，反义）","context":"健康建议和医疗场景用语，drink plenty of water/fluids 为常见健康提示句式。","expand":"fluid 搭配：body fluids（体液）、fluid intake（液体摄入量）、intravenous fluids（静脉输液）。plenty of 后接可数或不可数名词。"}},{"front":"Fill in the blanks with a short phrase.\nInfants are ______ ______ overheating in hot weather.","back":"Answer：vulnerable to<br><br>Example：Infants are vulnerable to overheating in hot weather.<br><br>Usage note：vulnerable to is followed by a noun or -ing form.<br><br>中文确认：婴儿容易过热。","type":"句式结构卡","prompt":"sentence_frame","answertype":"phrase","task":"Fill in the blanks with a short phrase.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"vulnerable to","study":{"meaning":"对...脆弱/容易受到...伤害，形容词短语，后接名词或动名词，描述易感性。","related":"susceptible to、prone to、at risk of、open to（同义）；resistant to、immune to（反义）","context":"书面和口语均可，常用于描述群体或个体面对风险的易感性。如 infants are vulnerable to overheating。","expand":"vulnerable 常见搭配：vulnerable groups（弱势群体）、vulnerable to attack（易受攻击）。名词：vulnerability（脆弱性）；反义词：invulnerable（不可伤害的）。"}},{"front":"Fill in two words.\nKeep the baby out of ______ ______.","back":"Answer：direct sunlight<br><br>Example：Keep the baby out of direct sunlight.<br><br>Usage note：The phrase is direct sunlight, not directly sunlight.<br><br>中文确认：避免阳光直射。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"direct sunlight","study":{"meaning":"直射阳光/未经遮挡的阳光，指太阳直接照射而非经过反射或过滤的光线。","related":"indirect sunlight（间接阳光，反义）、shade（阴凉处）、UV rays（紫外线）、sun exposure（日晒）","context":"健康和育儿建议常用语，keep out of direct sunlight（避免阳光直射）为常见表达。注意用 direct（形容词）而非 directly（副词）。","expand":"direct 搭配：direct flight（直飞）、direct impact（直接影响）、direct contact（直接接触）。sunlight 相关：moonlight（月光）、daylight（日光）。"}},{"front":"Fill in one word.\nDo not cover their pram ______ a blanket or sheet.","back":"Answer：with<br><br>Example：Do not cover their pram with a blanket or sheet.<br><br>Usage note：The pattern is cover something with something.<br><br>中文确认：用毯子或床单盖住婴儿车。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"with","study":{"meaning":"用/以，介词，在此处构成 cover something with something 的固定搭配，表示覆盖所用的材料。","related":"using（使用）、by means of（通过...方式）、wrap with（用...包裹）","context":"描述覆盖或包裹的材料/工具，口语和书面均可。cover/protect/wrap with 为常见固定搭配。","expand":"同类搭配：covered with snow（被雪覆盖）、protect with sunscreen（用防晒霜保护）、wrap with a towel（用毛巾包裹）。with 表材料/工具是其核心用法。"}},{"front":"Fill in one word.\nCovering a pram with a blanket can rapidly lead to ______.","back":"Answer：overheating<br><br>Example：Covering a pram with a blanket can rapidly lead to overheating.<br><br>Usage note：lead to is followed by a noun or -ing form.<br><br>中文确认：这可能迅速导致过热。","type":"句式结构卡","prompt":"sentence_frame","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"overheating","study":{"meaning":"过热/温度过高，动名词形式，指因散热不良导致体温或设备温度异常升高。","related":"heat up（变热）、overheating（过热）；cooling down（降温，反义）；hyperthermia（体温过高）","context":"健康和安全语境，描述婴儿或设备因散热不良导致温度过高。lead to overheating（导致过热）为常见搭配，lead to 后接名词或动名词。","expand":"over- 前缀表示「过度\"：overeat（暴食）、overwork（过劳）、overload（超载）、overreact（过度反应）。lead to 后接 -ing 形式：lead to overheating、lead to misunderstanding。"}},{"front":"Fill in one word.\nInstead of covering a pram with a blanket, you can use ______ sun shades.","back":"Answer：clip-on<br><br>Example：Use clip-on sun shades instead of covering the pram with a blanket.<br><br>Usage note：clip-on means something can be attached by clipping it on.<br><br>中文确认：夹式遮阳罩。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in one word.","priority":"熟悉","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"clip-on","study":{"meaning":"夹式的/可夹附的，形容词，指可通过夹子固定在物体上的配件。","related":"attachable（可附着的）、snap-on（卡扣式）、built-in（内置的，反义）","context":"产品描述用语，常用于遮阳罩、麦克风、墨镜等可拆卸配件。clip-on sun shades（夹式遮阳罩）。","expand":"clip 作动词：clip on（夹上去）、clip off（剪掉）。clip 作名词：paper clip（回形针）、hair clip（发夹）。复合词：clip-on tie（夹式领带）。"}},{"front":"Recall one word.\nWhat word can refer to a small sun umbrella used for shade, especially around a pram?","back":"Answer：parasol<br><br>Example：Parasols can help keep direct sunlight off the baby.<br><br>Usage note：parasol is more specifically for sun protection than umbrella.<br><br>中文确认：遮阳伞。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Recall one word.","priority":"熟悉","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"parasol","study":{"meaning":"遮阳伞，专为遮挡阳光设计的小型伞具，与防雨的 umbrella 不同。","related":"sunshade（遮阳物）、umbrella（雨伞）、canopy（顶篷）、beach umbrella（沙滩伞）","context":"育儿和户外场景，特指遮阳用的伞。比 umbrella 更强调防晒功能。常与 pram 搭配使用。","expand":"para- 前缀意为「防/挡「：parasol = para（防）+ sol（太阳）。sol 源自拉丁语「太阳\"。类似构词：parachute（para + chute，防坠落=降落伞）。"}},{"front":"Fill in one word.\nA blanket over a pram can trap heat and reduce ______ around the baby.","back":"Answer：airflow<br><br>Example：Make sure there is enough airflow around the baby.<br><br>Usage note：Common phrases: enough airflow, good airflow, poor airflow.<br><br>中文确认：空气流通 / 气流。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"airflow","study":{"meaning":"气流/空气流通，名词，描述空气在空间中的流动情况。","related":"ventilation（通风）、air circulation（空气循环）、draught（穿堂风）、breeze（微风）","context":"健康和安全场景常用，描述空间内空气流动是否充足。enough/good/poor airflow 为常见搭配。","expand":"air 搭配：air quality（空气质量）、air conditioner（空调）、air vent（通风口）。flow 搭配：blood flow（血流）、cash flow（现金流）、water flow（水流）。"}},{"front":"Fill in one word.\nA baby carrier or ______ can count as an extra layer of clothing.","back":"Answer：sling<br><br>Example：A baby carrier or sling can count as an extra layer of clothing.<br><br>Usage note：A sling is often a soft cloth-style baby carrier.<br><br>中文确认：婴儿背带 / 吊带。","type":"话题词汇卡","prompt":"contrast","answertype":"word","task":"Fill in one word.","priority":"熟悉","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"sling","study":{"meaning":"婴儿背带/吊带，一种柔软的布制婴儿携带工具，可系在成人身上。","related":"baby carrier（婴儿背带）、baby wrap（裹巾）、stroller（婴儿车）、papoose（婴儿背袋）","context":"育儿场景用语，sling 特指布料式的柔软背带，与硬壳式 carrier 区分。可算作额外衣物层。","expand":"sling 其他含义：arm sling（手臂吊带/悬带）、sling a bag over the shoulder（把包甩到肩上）、sling shot（弹弓）。动词 sling 意为「抛/吊\"。"}},{"front":"Fill in two words.\nBaby carriers ______ ______ additional layers of clothing.","back":"Answer：count as<br><br>Example：Baby carriers count as additional layers of clothing.<br><br>Usage note：count as = be considered as.<br><br>中文确认：算作 / 被视为额外衣物层。","type":"句式结构卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"count as","study":{"meaning":"算作/被视为，动词短语，表示某物在某方面等同于或可归类为另一事物。","related":"be considered as（被视为）、qualify as（有资格算作）、act as（充当）、equate to（等同于）","context":"口语和书面均可，常用于将某物归入某类。count as additional layers（算作额外衣物层）。","expand":"count 其他搭配：count on（依靠）、count in（算上我）、count towards（计入）。count 作名词：head count（人数）、final count（最终计数）。"}},{"front":"Fill in two words.\nChoose a lightweight carrier made of ______, ______ fabric.","back":"Answer：natural, breathable<br><br>Example：Choose a lightweight carrier made of natural, breathable fabric.<br><br>Usage note：breathable fabric is a useful product/material phrase.<br><br>中文确认：天然、透气面料。","type":"句式结构卡","prompt":"sentence_frame","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"处理中暑/过热风险","date":"2026-06-20","answer":"natural, breathable","study":{"meaning":"天然的、透气的，两个形容词并列修饰面料材质：natural 指非人造的天然材料，breathable 指允许空气流通的。","related":"airy（透气的）、ventilated（通风的）；synthetic（合成的，反义）、airtight（密封的，反义）","context":"服装和户外用品推荐常用语，描述面料品质。breathable fabric（透气面料）为高频搭配。","expand":"breathable = breath + able（可呼吸的→透气的）。同类构词： wearable（可穿戴的）、washable（可洗的）、reusable（可重复使用的）。natural 反义：artificial、synthetic。"}},{"front":"Fill in two words.\nThe advice ______ ______ when you see your life in weeks.","back":"Answer：hits different<br><br>Example：It hits different when you visualise how many weeks you have lived.<br><br>Usage note：hits different = feels different emotionally; informal, no object.<br><br>中文确认：感觉不一样 / 受到触动。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"可视化你的人生","date":"2026-07-01","answer":"hits different","study":{"meaning":"感觉不一样/触动更深，非正式口语表达，形容某事带来特别的或更深的情感体验。","related":"feels different、strikes a chord、resonates（产生共鸣）、hits home（触动内心）","context":"非正式口语/网络流行语，常接 when 从句：It hits different when you see your life in weeks。年轻人常用。","expand":"hit 的情感搭配：hit home（说到心坎上）、hit the spot（恰到好处）、hit hard（打击很大）。different 此处为副词用法（=differently），属非正式语法。"}},{"front":"Fill in three words.\nI did not ______ ______ ______ fill it in at that moment.","back":"Answer：have the guts to<br><br>Example：I did not have the guts to fill it in at that moment.<br><br>Usage note：have the guts to = have the courage to; informal.<br><br>中文确认：有勇气做某事。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"可视化你的人生","date":"2026-07-01","answer":"have the guts to","study":{"meaning":"有勇气做某事/有胆量去做，非正式口语表达，guts 俚语中意为「胆量/勇气\"。","related":"have the courage to（有勇气）、dare to（敢于）、be brave enough to（足够勇敢去）；chicken out（退缩，反义）","context":"非正式口语，描述面对困难或令人畏惧之事时的勇气。常用于否定句：didn't have the guts to。","expand":"guts = 胆量（俚语），gut 原义为「肠子/内脏\"。相关表达：gut feeling（直觉）、spill one's guts（和盘托出）、bust a gut（拼命干）。"}},{"front":"Fill in three words.\nI might do a bit of ______ ______ ______.","back":"Answer：back and forth<br><br>Example：I might do a bit of back and forth before deciding.<br><br>Usage note：back and forth = moving between two points or ideas.<br><br>中文确认：来回 / 反复。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"熟悉","topic":"可视化你的人生","date":"2026-07-01","answer":"back and forth","study":{"meaning":"来回/反复，表示在两点之间来回移动或在两个想法之间反复犹豫。","related":"to and fro（来回，同义）、alternating（交替的）、oscillating（摇摆的）；one-way（单向的，反义）","context":"口语和书面均可，可描述物理来回移动或思维上的反复犹豫。可作副词或形容词。","expand":"作形容词时加连字符：back-and-forth discussion（反复讨论）、back-and-forth motion（往复运动）。类似结构：up and down（上下）、in and out（进出）。"}},{"front":"Fill in two words.\nI ______ ______ how I spend my week.","back":"Answer：ponder on<br><br>Example：I ponder on how I spend my week in a week of time.<br><br>Usage note：ponder on = think carefully about; more formal than think about.<br><br>中文确认：深思 / 仔细考虑。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"可视化你的人生","date":"2026-07-01","answer":"ponder on","study":{"meaning":"深思/仔细考虑，动词短语，比 think about 更正式，强调深入、长时间的思考。","related":"reflect on（反思）、contemplate（沉思）、muse on（冥想）、deliberate on（审议）","context":"较正式的表达，常用于描述对人生、未来等重要问题的深入思考。口语中可用 think about 替代。","expand":"ponder 可直接接宾语：ponder the question（思考问题），也可接 on/over：ponder over the meaning（深思意义）。名词：pondering（沉思）。词源：拉丁语 ponderare（称重→权衡）。"}},{"front":"Recall one word.\nWhat word means to gather or build up over time, often used for experiences or weeks?","back":"Answer：accumulate<br><br>Example：Weeks accumulate and soon that's gonna be your year.<br><br>Usage note：accumulate is a formal verb for gradual collection.<br><br>中文确认：积累 / 积聚。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Recall one word.","priority":"必背","topic":"可视化你的人生","date":"2026-07-01","answer":"accumulate","study":{"meaning":"积累/积聚，正式动词，指经验、财富、时间等逐渐增加并汇集。","related":"amass（大量积聚）、gather（收集）、build up（逐步积累）；dissipate（消散，反义）、deplete（耗尽，反义）","context":"正式用语，常用于描述时间、财富、经验等的逐步增长。如 weeks accumulate（周复一周地积累）。","expand":"名词：accumulation（积累）；形容词：accumulative。常见搭配：accumulate wealth（积累财富）、accumulate experience（积累经验）、accumulate dust（积灰）。前缀 ac- = ad-（朝向）。"}},{"front":"Fill in one word.\n______ how many weeks that you have lived of your life.","back":"Answer：Visualising<br><br>Example：Visualising how many weeks that you have lived of your life.<br><br>Usage note：visualise = form a mental image; British spelling with s, American visualize with z.<br><br>中文确认：可视化 / 想象。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"可视化你的人生","date":"2026-07-01","answer":"Visualising","study":{"meaning":"可视化/想象，动词 visualise 的动名词形式，指在头脑中形成画面或图像。","related":"imagine（想象）、picture（构想）、envision（展望）、conceive（构思）","context":"英式拼写用 s（visualise），美式用 z（visualize）。常用于描述将抽象概念转化为直观图像。","expand":"名词：visualisation（可视化）；形容词：visual（视觉的）。相关词：visual aids（视觉辅助工具）、visual arts（视觉艺术）。词根：visual（视觉的）+ -ise（使动后缀）。"}},{"front":"Say a short phrase aloud.\nWhat do you do every Sunday to track your life in weeks?","back":"Answer：Mark every week lived so far<br><br>Example：Mark every week lived so far and new ones every Sunday.<br><br>Usage note：mark = make a visible record; so far = up to now.<br><br>中文确认：标记到目前为止度过的每一周。","type":"短语表达卡","prompt":"scenario_recall","answertype":"phrase","task":"Say a short phrase aloud.","priority":"熟悉","topic":"可视化你的人生","date":"2026-07-01","answer":"Mark every week lived so far","study":{"meaning":"标记到目前为止度过的每一周，描述用可视化方式追踪人生时间的动作。","related":"track each week（追踪每周）、record every week（记录每周）、keep a tally of weeks（每周计数）","context":"个人成长和时间管理场景，so far = 到目前为止。mark = 做标记，强调可视化记录。","expand":"mark 搭配：mark down（记下）、mark off（划掉/勾选）、mark up（标记加价）。so far = 到目前为止，常与完成时态搭配。lived 为过去分词修饰 week。"}},{"front":"Complete the sentence.\n______ ______ ______ ______.","back":"Answer：Spend your time wisely<br><br>Example：Spend your time wisely.<br><br>Usage note：wisely is an adverb modifying spend; common imperative advice.<br><br>中文确认：明智地花费你的时间。","type":"句式结构卡","prompt":"sentence_frame","answertype":"sentence","task":"Complete the sentence.","priority":"必背","topic":"可视化你的人生","date":"2026-07-01","answer":"Spend your time wisely","study":{"meaning":"明智地花费你的时间，祈使句式建议，wisely 为副词修饰动词 spend。","related":"use your time well（善用时间）、make good use of time（充分利用时间）；waste time（浪费时间，反义）","context":"常见的劝诫性祈使句，用于人生建议或时间管理场景。wisely 副词修饰动词，置于句末。","expand":"wisely = wise + ly（副词后缀）。同类搭配：choose wisely（明智选择）、spend wisely（明智花费）、invest wisely（明智投资）。spend time doing sth 为常见句式。"}},{"front":"Fill in two words.\nYou should ______ ______ your own values, not others' opinions.","back":"Answer：live by<br><br>Example：Live by your own code, not someone else's.<br><br>Usage note：live by = act according to (a principle or value).<br><br>中文确认：依照…生活 / 奉行。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"live by","study":{"meaning":"依照...生活/奉行，动词短语，表示以某种原则或价值观指导自己的行为。","related":"abide by（遵守）、adhere to（坚持）、follow（遵循）、stick to（坚守）；go against（违背，反义）","context":"描述以某种准则或价值观指导行为，常与 code、principles、values 搭配。live by your own code（按自己的准则生活）。","expand":"live 相关短语：live up to（不辜负）、live with（忍受）、live on（以...为生）、live through（经历）。习语：live by the sword, die by the sword（靠武力生存，必死于武力）。"}},{"front":"Fill in three words.\nPeople will always ______ ______ ______, no matter what you do.","back":"Answer：hate on you<br><br>Example：People will always hate on you.<br><br>Usage note：hate on = criticize or be jealous of; informal slang.<br><br>中文确认：对你恶意批评 / 黑你。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"hate on you","study":{"meaning":"对你恶意批评/黑你，非正式俚语，指出于嫉妒或恶意而攻击、贬低某人。","related":"criticize（批评）、bash（抨击）、trash-talk（说坏话）、badmouth（诽谤）；support（支持，反义）、root for（支持，反义）","context":"非正式俚语/网络用语，描述出于嫉妒或恶意攻击某人的行为。hate on 可接任何人称代词。","expand":"hate on = hate + on（介词表「针对\"）。相关名词：hater（黑子/喷子）、hate speech（仇恨言论）。hate on someone 为现代俚语用法，非传统 hate 的搭配。"}},{"front":"Fill in one word.\nSome people will ______ you, but you mustn't let their energy affect you.","back":"Answer：mistreat<br><br>Example：People who mistreat you are not worth your energy.<br><br>Usage note：mistreat = treat badly; prefix mis- means wrong/bad.<br><br>中文确认：虐待 / 不公正对待。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in one word.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"mistreat","study":{"meaning":"虐待/不善待，正式动词，前缀 mis- 表示「错误/不当\"，指以不当方式对待某人。","related":"abuse（虐待）、maltreat（苛待）、mishandle（处理不当）；treat well（善待，反义）、care for（照顾，反义）","context":"正式用语，常用于描述对他人或动物的不当对待。前缀 mis- 表示「错误地\"。","expand":"mis- 前缀词系列：misunderstand（误解）、mislead（误导）、misplace（放错）、misuse（误用）、misjudge（误判）。treat 的搭配：treat with respect（尊重对待）、treat equally（平等对待）。"}},{"front":"Fill in four words.\nA hater might ______ ______ ______ ______.","back":"Answer：give me a dirty look<br><br>Example：They might give me a dirty look, but I just smile.<br><br>Usage note：a dirty look = a disapproving or hostile facial expression.<br><br>中文确认：给我一个嫌弃的眼神。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"give me a dirty look","study":{"meaning":"给我一个嫌弃的眼神/瞪我一眼，口语表达，指用面部表情表达不满或敌意。","related":"glare at（怒视）、scowl at（皱眉瞪）、shoot a dirty look（投以嫌弃目光）；smile at（微笑，反义）、beam at（笑容满面，反义）","context":"口语表达，描述用不悦的面部表情传达负面态度。a dirty look = 不悦或敌意的表情。","expand":"dirty 的引申义：dirty joke（下流笑话）、dirty mind（不健康心思）、dirty trick（卑劣手段）。look 搭配：give a look（看一眼）、take a look（看一下）、look the other way（视而不见）。"}},{"front":"Complete the proverb.\n______ ______ ______.","back":"Answer：Misery loves company<br><br>Example：Misery loves company — unhappy people want others to be unhappy too.<br><br>Usage note：A proverb meaning unhappy people seek others to share their misery.<br><br>中文确认：同病相怜 / 痛苦喜欢有人陪伴。","type":"句式结构卡","prompt":"sentence_frame","answertype":"sentence","task":"Complete the proverb.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"Misery loves company","study":{"meaning":"同病相怜/痛苦爱拉人下水，英语谚语，意指不开心的人希望别人也不开心。","related":"shared sorrow（共担悲伤）、birds of a feather flock together（物以类聚）、suffering seeks companions","context":"英语经典谚语，用于解释为什么不开心的人会试图传播负面情绪。正式和非正式场合均可使用。","expand":"misery = 悲惨/痛苦（名词）；miserable（形容词，痛苦的）。company = 陪伴/同伴（不可数名词），相关：keep someone company（陪伴某人）、in the company of（在...陪同下）。"}},{"front":"Fill in two words.\nYou mustn't let their energy ______ ______ yours.","back":"Answer：seep into<br><br>Example：You mustn't let their energy seep into yours.<br><br>Usage note：seep into = slowly enter or affect; often used for negative influences.<br><br>中文确认：渗透进 / 悄然影响。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"seep into","study":{"meaning":"渗透进/悄然影响，动词短语，本指液体缓慢渗入，引申为负面情绪或影响不知不觉地侵入。","related":"infiltrate（渗入）、permeate（渗透）、creep into（悄然进入）、leak into（漏入）；stay out（留在外，反义）","context":"可指物理渗透（液体渗入地面）或比喻用法（负面情绪影响他人）。常用于劝告不要让别人的负能量影响自己。","expand":"seep 搭配：seep through（渗透过）、seep away（渗漏流失）。seep 与 leak 的区别：seep 强调缓慢渗透，leak 强调有缝隙漏出。相关词：seepage（渗漏/渗出物）。"}},{"front":"Say a short phrase aloud.\nWhat phrase means to figure out how to make someone like you?","back":"Answer：crack their code<br><br>Example：You'll never know how to get them to like you. You can't crack their code.<br><br>Usage note：crack a code = solve a mystery; metaphorical from codebreaking.<br><br>中文确认：破解他们的密码 / 搞懂他们。","type":"短语表达卡","prompt":"scenario_recall","answertype":"phrase","task":"Say a short phrase aloud.","priority":"熟悉","topic":"应对负面评价","date":"2026-07-01","answer":"crack their code","study":{"meaning":"破解他们的密码/搞懂他们，比喻用法，源于密码破译，指弄明白某人的想法或行为模式。","related":"figure them out（搞懂他们）、decode（解码）、work them out（弄明白）；be puzzled by（被...困惑，反义）","context":"比喻用法，描述试图理解某人的心理或行为规律。口语和书面均可。crack a code 原义为破解密码。","expand":"crack 的多种搭配：crack a joke（讲笑话）、crack under pressure（扛不住压力）、crack the case（破案）、crack a smile（勉强一笑）。code = 密码/法则/编码。"}},{"front":"Fill in two words.\nThey want to ______ ______ in a specific way.","back":"Answer：perceive me<br><br>Example：They want to perceive me in a specific way.<br><br>Usage note：perceive = see or interpret someone in a certain way; formal.<br><br>中文确认：以特定方式看待我。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"perceive me","study":{"meaning":"以某种方式看待我/感知我，正式动词，描述他人对自己的看法或解读方式。","related":"see me（看我）、view me（看待我）、regard me（认为我）；ignore（忽略，反义）、overlook（忽视，反义）","context":"正式用语，常用于讨论他人如何看待自己。perceive someone in a specific way（以特定方式看待某人）。","expand":"名词：perception（认知/感知）；形容词：perceptive（敏锐的）、perceptible（可察觉的）。perceive as = 看作/认为。词源：拉丁语 percipere（抓住/理解）。"}},{"front":"Fill in two words.\nI don't want to ______ ______ in the process.","back":"Answer：let myself down<br><br>Example：I don't want to let myself down in the process.<br><br>Usage note：let someone down = disappoint; let myself down = disappoint myself.<br><br>中文确认：让自己失望 / 辜负自己。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"let myself down","study":{"meaning":"让自己失望/辜负自己，动词短语 let someone down 的反身用法，表示未能达到自己的期望。","related":"disappoint myself（让自己失望）、fail myself（辜负自己）；live up to my expectations（不负期望，反义）","context":"口语和书面均可，常用于表达对自身表现的不满或激励自己。let someone down = 让某人失望。","expand":"let down 其他用法：let the team down（让团队失望）、let my parents down（让父母失望）。名词：letdown（失望的事）。反义：live up to（不辜负）。"}},{"front":"Fill in three words.\nYou are allowed to ______ ______ ______ what you disclose about your past.","back":"Answer：pick and choose<br><br>Example：You are allowed to pick and choose what you disclose about your past.<br><br>Usage note：pick and choose = select carefully; often implies selective sharing.<br><br>中文确认：挑选 / 有所选择。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"pick and choose","study":{"meaning":"挑选/有所选择，动词短语，强调仔细或挑剔地选择，常暗示有选择性地分享或处理。","related":"select carefully（仔细挑选）、be selective about（对...有选择性）、cherry-pick（精选/挑剔地选）","context":"口语和书面均可，常用于描述有选择性地分享信息或做决定。You can pick and choose what to disclose。","expand":"pick 和 choose 为近义词并列，类似结构：pick and mix（自选组合）、pick and choose your battles（有选择性地应对）。pick 搭配：pick up（捡起/学会）、pick out（挑选出）。"}},{"front":"Fill in two words.\nIt's OK to ______ ______ around you.","back":"Answer：create some mystery<br><br>Example：It's OK to create some mystery around you.<br><br>Usage note：create mystery = make yourself intriguing; let people be curious about you.<br><br>中文确认：制造一些神秘感。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"应对负面评价","date":"2026-07-01","answer":"create some mystery","study":{"meaning":"制造一些神秘感/保持一定的神秘，指让自己显得神秘、引人好奇，不把一切都暴露出来。","related":"keep an air of mystery（保持神秘感）、be intriguing（引人好奇）、remain enigmatic（保持神秘）；reveal everything（全盘托出，反义）","context":"社交策略用语，建议在人际交往中保持一定神秘感以增加吸引力。常与 around you 搭配。","expand":"create 搭配：create an impression（制造印象）、create a stir（引起轰动）、create opportunities（创造机会）。mystery 相关：mysterious（神秘的）、mystery novel（推理小说）。"}},{"front":"Fill in two words.\nGive them the most ______ ______ you've ever given anyone.","back":"Answer：genuine smile<br><br>Example：Give them the most genuine smile you've ever given anyone in your life.<br><br>Usage note：genuine = real, sincere; collocates strongly with smile, interest, concern.<br><br>中文确认：真诚的微笑。","type":"短语表达卡","prompt":"collocation","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"应对负面评价","date":"2026-07-01","answer":"genuine smile","study":{"meaning":"真诚的微笑/发自内心的笑容，genuine 强调真实、不做作，与 smile 高频搭配。","related":"sincere smile（真诚的微笑）、warm smile（温暖的微笑）、heartfelt smile（由衷的笑）；fake smile（假笑，反义）、forced smile（勉强的笑，反义）","context":"日常和社交场景，genuine 常与 smile、interest、concern 等积极词汇搭配，强调真实不虚假。","expand":"genuine 搭配：genuine interest（真诚的兴趣）、genuine concern（由衷的关心）、genuine leather（真皮）。名词：genuineness（真实性）。反义：fake、artificial、insincere。"}},{"front":"Fill in two words.\nBabies who are ______ ______ receive only breast milk.","back":"Answer：exclusively breastfed<br><br>Example：Exclusively breastfed babies don't need extra water.<br><br>Usage note：exclusively = only; breastfed = fed with breast milk.<br><br>中文确认：纯母乳喂养的。","type":"话题词汇卡","prompt":"topic_context","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"exclusively breastfed","study":{"meaning":"纯母乳喂养的，exclusively 意为「仅仅/完全「，breastfed 意为「母乳喂养的\"，合指只吃母乳不加其他食物。","related":"breastfed only（仅母乳喂养）、nursing（哺乳中）；formula-fed（配方奶喂养的，反义）、mixed feeding（混合喂养）","context":"育儿和医学场景用语，描述婴儿仅以母乳为食的喂养方式。exclusively breastfed babies don't need extra water。","expand":"exclusive 搭配：exclusive rights（独占权）、exclusive interview（独家采访）、mutually exclusive（互斥的）。breastfeed = breast + feed，过去式/过去分词为 breastfed。"}},{"front":"Fill in two words.\nBabies who drink ______ ______ get formula instead of breast milk.","back":"Answer：formula-fed<br><br>Example：Formula-fed babies may be offered small sips of water.<br><br>Usage note：formula = a substitute for breast milk; hyphenated adjective.<br><br>中文确认：配方奶喂养的。","type":"话题词汇卡","prompt":"topic_context","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"formula-fed","study":{"meaning":"配方奶喂养的，formula 指婴儿配方奶粉，与 breastfed（母乳喂养的）相对。","related":"bottle-fed（奶瓶喂养的）、formula-feeding（配方奶喂养）；exclusively breastfed（纯母乳喂养的，反义）","context":"育儿场景用语，描述以配方奶粉代替母乳喂养婴儿的方式。formula-fed babies may be offered small sips of water。","expand":"formula 多义：mathematical formula（数学公式）、chemical formula（化学式）、baby formula（婴儿配方奶）。复合形容词用连字符：formula-fed、bottle-fed、spoon-fed（勺喂的）。"}},{"front":"Fill in four words.\nBabies can have ______ ______ ______ ______.","back":"Answer：occasional sips of water<br><br>Example：Occasional sips of water are fine in hot weather.<br><br>Usage note：occasional = not regular; sips = small amounts drunk.<br><br>中文确认：偶尔喝几口水。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"必背","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"occasional sips of water","study":{"meaning":"偶尔喝几口水，occasional 意为「偶尔的/不经常的「，sips 意为「小口啜饮\"。","related":"occasional drinks of water（偶尔喝水）、a little water now and then（不时喝点水）、small amounts of water（少量水）","context":"育儿建议用语，描述在炎热天气给婴儿少量补充水分的方式。occasional 强调不频繁，sips 强调少量。","expand":"occasional 搭配：occasional visitor（偶尔来访的客人）、occasional rain（偶尔下雨）。sip 搭配：take a sip（喝一口）、sip slowly（慢慢啜饮）。名词 occasional = 偶尔的，源自 occasion（场合）。"}},{"front":"Fill in two words.\nOnce babies start ______ ______, they can have small amounts of water.","back":"Answer：eating solids<br><br>Example：When they start eating solids, offer water alongside food.<br><br>Usage note：solids = solid food (not liquid); contrasts with milk-only diet.<br><br>中文确认：开始吃固体食物。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"eating solids","study":{"meaning":"开始吃固体食物，solids 在育儿语境中指非液态的辅食，与仅喝奶的阶段相对。","related":"starting solid food（开始吃辅食）、weaning onto solids（断奶转固体食物）、introducing solids（引入固体食物）","context":"育儿场景用语，描述婴儿从纯奶饮食过渡到固体食物的阶段。once babies start eating solids（一旦婴儿开始吃固体食物）。","expand":"solid 多义：solid food（固体食物）、solid state（固态）、solid evidence（确凿证据）、solid color（纯色）。反义：liquid（液体）、fluid（流质）。start doing sth = 开始做某事。"}},{"front":"Fill in two words.\nOffer water ______ ______ ______.","back":"Answer：alongside their food<br><br>Example：They can be offered small amounts of water alongside their food.<br><br>Usage note：alongside = together with; preposition.<br><br>中文确认：随餐一起 / 配合食物。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"alongside their food","study":{"meaning":"随餐一起/配合食物，alongside 为介词，意为「与...一起/伴随\"。","related":"together with their food（与食物一起）、with their meals（随餐）、accompanied by food（伴随食物）","context":"育儿和饮食场景，描述在吃固体食物的同时补充水分。offer water alongside their food（随餐提供水）。","expand":"alongside 其他用法：work alongside（并肩工作）、alongside the river（沿着河边）。alongside = along + side，字面意为「在...旁边\"。近义介词：beside、together with。"}},{"front":"Fill in two words.\nPoint a fan ______ ______ the baby.","back":"Answer：away from<br><br>Example：Point a fan away from the baby, not directly at them.<br><br>Usage note：away from = in the opposite direction; common directional phrase.<br><br>中文确认：远离 / 朝反方向。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"away from","study":{"meaning":"远离/朝反方向，表示方向性短语，强调避开某人或某物。","related":"far from（远离）、in the opposite direction（朝反方向）、clear of（避开）；towards（朝向，反义）","context":"方向性短语，常与 point、move、keep 搭配。point a fan away from the baby（把风扇朝远离婴儿的方向吹）。","expand":"away 搭配：keep away from（远离）、run away from（逃离）、move away from（移开）。away from 强调保持距离，away 单独也可表示「离开\"：go away（走开）、far away（遥远）。"}},{"front":"Fill in four words.\nYou can ______ ______ ______ ______ to help cool the baby.","back":"Answer：cool the room down<br><br>Example：Cool the room down before putting the baby to sleep.<br><br>Usage note：cool down = reduce temperature; phrasal verb with object.<br><br>中文确认：给房间降温。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"必背","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"cool the room down","study":{"meaning":"cool(降温)+the room(房间)+down(彻底) = 把房间温度降下来，指通过空调或通风使室内变凉。","related":"cool down、lower the temperature、air the room out","context":"育儿或夏季健康建议中，描述为婴儿或家人创造凉爽室内环境的动作。","expand":"cool down 可接宾语也可不接：cool down(自己降温) vs cool the room down(给房间降温)；down 表示彻底完成。"}},{"front":"Fill in two words.\nUse a ______ ______ to monitor the baby's room temperature.","back":"Answer：room thermometer<br><br>Example：A room thermometer helps you have an accurate idea of temperature.<br><br>Usage note：thermometer = temperature measuring device; compound noun.<br><br>中文确认：室温计。","type":"话题词汇卡","prompt":"collocation","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"room thermometer","study":{"meaning":"room(房间)+thermometer(温度计) = 室温计，用于测量室内温度的仪器。","related":"thermometer、temperature gauge、thermostat","context":"育儿和健康场景，用于监控婴儿房间温度是否处于安全范围。","expand":"thermo(热)+meter(测量仪)；相关词：clinical thermometer(体温计)、thermostat(恒温器)、barometer(气压计)。"}},{"front":"Fill in three words.\nUse ______ ______ ______ at night to prevent overheating.","back":"Answer：no bedding<br><br>Example：Use no bedding at night in hot weather to reduce overheating risk.<br><br>Usage note：bedding = sheets, blankets; no bedding = remove all covers.<br><br>中文确认：不使用床上用品。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"no bedding","study":{"meaning":"no(不用)+bedding(床上用品) = 不使用任何被褥或床单，以防止婴儿过热。","related":"bare crib、remove covers、no blankets","context":"婴儿防暑建议中，描述高温天气下减少婴儿床上覆盖物以降低过热风险。","expand":"bedding = 统称床上用品(sheets, blankets)；近义：bedclothes；cot bedding = 婴儿床上用品。"}},{"front":"Fill in two words.\nYou should always ______ ______ your baby's wellbeing.","back":"Answer：concern for<br><br>Example：Always concern for one's wellbeing in hot weather.<br><br>Usage note：concern for = care about; note: concern about is also valid.<br><br>中文确认：关心 / 担忧。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"concern for","study":{"meaning":"concern(关心)+for(对) = 对某人或某事表示关心、担忧。","related":"care about、worry about、be concerned about","context":"表达对他人福祉的关注，正式用语，常接人或 wellbeing 等词。","expand":"concern for 侧重关心，concern about 侧重担忧；concern 作名词：show concern for someone。"}},{"front":"Fill in three words.\nIf worried, always ______ ______ ______.","back":"Answer：seek medical advice<br><br>Example：If concerned, seek medical advice immediately.<br><br>Usage note：seek = look for; medical advice = professional health guidance.<br><br>中文确认：寻求医疗建议。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"seek medical advice","study":{"meaning":"seek(寻求)+medical advice(医疗建议) = 向医生或专业医疗机构咨询意见。","related":"consult a doctor、get medical help、see a doctor","context":"健康建议中，描述在担心病情时应采取的行动，正式用语。","expand":"seek 搭配：seek help、seek treatment、seek refuge；advice 为不可数名词：a piece of advice。"}},{"front":"Recall one word.\nWhat word refers to a trained professional who supports women during pregnancy and birth?","back":"Answer：midwife<br><br>Example：A midwife can give advice on caring for infants in hot weather.<br><br>Usage note：midwife = a health professional for pregnancy and birth care.<br><br>中文确认：助产士。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Recall one word.","priority":"熟悉","topic":"婴儿防暑与育儿","date":"2026-06-20","answer":"midwife","study":{"meaning":"mid(与...同在)+wife(妻子/妇女) = 助产士，专门负责孕产期护理和接生的专业人员。","related":"doula、obstetrician、nurse、birth attendant","context":"孕产和育儿语境，助产士可提供孕期、分娩和产后护理建议。","expand":"词源：mid(意为 with)+wife = 与妇女同在的人；复数：midwives；相关：midwifery(助产学)。"}},{"front":"Fill in two words.\n______ ______ form when warm air is underneath much cooler air.","back":"Answer：Thunderstorms<br><br>Example：Thunderstorms form when warm air is underneath much cooler air.<br><br>Usage note：thunderstorm = a storm with thunder and lightning; compound noun.<br><br>中文确认：雷暴。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in two words.","priority":"必背","topic":"雷暴与极端高温","date":"2026-06-20","answer":"Thunderstorms","study":{"meaning":"thunder(雷)+storm(暴风雨) = 伴有雷电的强对流天气现象。","related":"thunder、lightning、storm、downpour、cloudburst","context":"气象新闻和天气预报中，描述伴有雷电和大雨的强对流天气。","expand":"thunderstorm = thunder + storm；类似构词：snowstorm、sandstorm、hailstorm；雷电常搭配：thunder and lightning。"}},{"front":"Fill in two words.\nThere were ______ ______ lightning strikes during the storm.","back":"Answer：thousands of<br><br>Example：Thousands of lightning strikes were recorded.<br><br>Usage note：thousands of = a large number; lightning = electrical flash in sky (not lighting).<br><br>中文确认：数以千计的。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"雷暴与极端高温","date":"2026-06-20","answer":"thousands of","study":{"meaning":"thousands(数千)+of = 数以千计的，表示数量庞大。","related":"hundreds of、millions of、countless、numerous","context":"描述数量庞大，后接可数名词复数，用于新闻报道或日常表达。","expand":"数量级递进：dozens of → hundreds of → thousands of → millions of；前接具体数字时不用 of：two thousand。"}},{"front":"Fill in two words.\nThe storm brought very ______ ______.","back":"Answer：heavy rainfall<br><br>Example：Heavy rainfall caused flooding in the area.<br><br>Usage note：heavy rainfall = a lot of rain; collocation of heavy + rainfall.<br><br>中文确认：强降雨。","type":"话题词汇卡","prompt":"collocation","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"雷暴与极端高温","date":"2026-06-20","answer":"heavy rainfall","study":{"meaning":"heavy(大量的)+rainfall(降雨量) = 强降雨，指短时间内大量降水。","related":"downpour、torrential rain、heavy rain、precipitation","context":"气象预报和新闻报道中，描述大量降水的天气现象。","expand":"heavy 搭配：heavy snow(大雪)、heavy traffic(拥堵)、heavy rain(大雨)；rainfall = rain + fall，类似：snowfall。"}},{"front":"Fill in two words.\nHumid conditions make the atmosphere ______ and ______.","back":"Answer：unstable, allowing<br><br>Example：Humid conditions make the atmosphere unstable, allowing for tall cumulonimbus clouds.<br><br>Usage note：unstable = not stable; cumulonimbus = a type of tall storm cloud.<br><br>中文确认：不稳定，允许。","type":"句式结构卡","prompt":"sentence_frame","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"雷暴与极端高温","date":"2026-06-20","answer":"unstable, allowing","study":{"meaning":"unstable(不稳定的)、allowing(从而允许) = 使大气层不稳定，从而允许高耸的积雨云形成。","related":"atmospheric instability、permitting、enabling","context":"气象学描述，湿气使大气层不稳定，从而允许积雨云的发展。","expand":"un(不)+stable(稳定) = 不稳定；allow doing/allow for；气象词：cumulonimbus(积雨云)。"}},{"front":"Fill in one word.\nThunder ______ across the valley.","back":"Answer：bellowed<br><br>Example：Thunder bellowed across the valley during the storm.<br><br>Usage note：bellow = a deep loud roar; often used for thunder or animals.<br><br>中文确认：轰鸣 / 怒吼。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in one word.","priority":"熟悉","topic":"雷暴与极端高温","date":"2026-06-20","answer":"bellowed","study":{"meaning":"bellow(发出低沉吼声)+ed(过去式) = 雷声在山谷中轰鸣回荡。","related":"roar、boom、rumble、thunder、resound","context":"文学性描写，描述雷声或其他低沉巨大的声响在空间中回响。","expand":"bellow 常用于动物(牛、大象)的吼叫；名词：a bellow；近义辨析：howl(嚎叫)、growl(低吼)。"}},{"front":"Fill in two words.\nPeople were ______ ______ non-essential rail travel.","back":"Answer：warned against<br><br>Example：People were warned against non-essential rail travel.<br><br>Usage note：warn against = advise not to do something; formal.<br><br>中文确认：被警告不要。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"雷暴与极端高温","date":"2026-06-20","answer":"warned against","study":{"meaning":"warn(警告)+against(反对) = 被警告不要做某事，正式用语。","related":"advise against、caution against、discourage from","context":"新闻或官方通告中，描述当局或专家建议民众不要做某事。","expand":"warn against + 名词/动名词；对比：warn about(提醒注意)、warn of(警告存在危险)。"}},{"front":"Fill in three words.\nThere was a ______ ______ ______ extreme heat.","back":"Answer：red warning for<br><br>Example：A red warning for extreme heat was issued at 09:00 BST.<br><br>Usage note：red warning = the highest alert level; for extreme heat.<br><br>中文确认：极端高温红色预警。","type":"话题词汇卡","prompt":"collocation","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"雷暴与极端高温","date":"2026-06-20","answer":"red warning for","study":{"meaning":"red(红色)+warning(预警)+for(针对) = 针对某种极端天气的红色(最高级别)预警。","related":"amber warning、yellow warning、weather alert、extreme heat warning","context":"英国气象局预警系统，红色为最高级别，表示天气可能危及生命。","expand":"预警级别递进：yellow → amber → red；Met Office 的三级预警体系，红色意味着采取行动。"}},{"front":"Fill in two words.\nThe heat caused widespread ______ ______.","back":"Answer：travel disruption<br><br>Example：Travel disruption affected trains and roads.<br><br>Usage note：disruption = interruption of normal activities; compound noun.<br><br>中文确认：交通中断。","type":"话题词汇卡","prompt":"collocation","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"雷暴与极端高温","date":"2026-06-20","answer":"travel disruption","study":{"meaning":"travel(交通)+disruption(中断/扰乱) = 交通中断，指交通服务受到严重影响。","related":"traffic chaos、transport breakdown、delays、cancellations","context":"新闻报道中，描述极端天气或其他事件导致交通系统的混乱和中断。","expand":"disrupt(动词) → disruption(名词)；搭配：cause disruption、severe disruption；相关：disruption to trains(火车中断)。"}},{"front":"Fill in three words.\nA ______ ______ was issued by the Met Office.","back":"Answer：Met office<br><br>Example：The Met office issued a red warning for extreme heat.<br><br>Usage note：Met office = UK's national weather service; Met = Meteorological.<br><br>中文确认：气象局。","type":"话题词汇卡","prompt":"topic_context","answertype":"phrase","task":"Fill in three words.","priority":"熟悉","topic":"雷暴与极端高温","date":"2026-06-20","answer":"Met office","study":{"meaning":"Met(Meteorological 气象的缩写)+office(局) = 英国国家气象局。","related":"weather service、meteorological bureau、weather center","context":"英国语境中特指英国气象局(Met Office)，负责天气预报和预警发布。","expand":"Met = Meteorological 的缩写；meteorology(气象学)；类似用法：Met Office 预报、Met Office 预警。"}},{"front":"Fill in five words.\nThe extreme heat can ______ ______ ______ ______ ______.","back":"Answer：pose a risk to life<br><br>Example：High temperatures can pose a risk to life.<br><br>Usage note：pose a risk = create danger; to life = threatening survival.<br><br>中文确认：对生命构成威胁。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in five words.","priority":"必背","topic":"雷暴与极端高温","date":"2026-06-20","answer":"pose a risk to life","study":{"meaning":"pose(构成)+a risk(风险)+to life(对生命) = 对生命构成危险或威胁。","related":"threaten life、endanger life、life-threatening、be dangerous","context":"正式新闻或官方通告中，描述极端天气等对人类生命的严重威胁。","expand":"pose 搭配：pose a threat、pose a danger、pose a question；to life 强调对生命的威胁程度。"}},{"front":"Fill in four words.\nThere were ______ ______ ______ ______.","back":"Answer：high day and night temperatures<br><br>Example：High day and high night temperatures make it hard to cool down.<br><br>Usage note：both day and night remain hot; compound description.<br><br>中文确认：昼夜高温。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"熟悉","topic":"雷暴与极端高温","date":"2026-06-20","answer":"high day and night temperatures","study":{"meaning":"high(高温的)+day and night(白天和夜晚)+temperatures(温度) = 白天和夜晚都保持高温。","related":"persistent heat、round-the-clock heat、heatwave、continuous high temperatures","context":"气象描述中，强调昼夜温差小、夜间也无法降温，增加健康风险。","expand":"day and night = 日夜；相关：day and night(日夜不停地)；temperature 搭配：high/low temperature。"}},{"front":"Fill in four words.\nChanges can happen ______ ______ ______ ______.","back":"Answer：at very short notice<br><br>Example：Weather can change at very short notice.<br><br>Usage note：at short notice = with little warning; very emphasizes the brevity.<br><br>中文确认：在极短的时间内通知。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"必背","topic":"雷暴与极端高温","date":"2026-06-20","answer":"at very short notice","study":{"meaning":"at short notice(临时通知)+very(极) = 在极短时间内才得到通知，强调时间紧迫。","related":"at a moment's notice、on short notice、unexpectedly、abruptly","context":"描述计划或安排在最后一刻才被告知或改变，常见于新闻和日常。","expand":"notice = 通知/预先告知；at short notice 英式，on short notice 美式；相关：give notice(提前通知)。"}},{"front":"Fill in four words.\nChildren should only ______ ______ ______ ______ area.","back":"Answer：cool off in water<br><br>Example：Only cool off in water in a designated and supervised area.<br><br>Usage note：cool off = reduce body heat; in water = in a pool or sea.<br><br>中文确认：在水中降温。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"必背","topic":"雷暴与极端高温","date":"2026-06-20","answer":"cool off in water","study":{"meaning":"cool off(凉快下来)+in water(在水中) = 通过泡水或游泳来降低体温。","related":"take a dip、go for a swim、wade in water","context":"夏季防暑建议中，描述在指定和有监管的区域通过入水来降温。","expand":"cool off = 凉快下来(不及物)；cool down 可接宾语；off 表示状态转变；相关：cool off in the pool。"}},{"front":"Fill in four words.\nMake sure to ______ ______ ______ ______ before the storm.","back":"Answer：charge up essential devices<br><br>Example：Charge up any essential devices before the storm hits.<br><br>Usage note：charge up = fill with electricity; essential = necessary.<br><br>中文确认：给必要设备充电。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"熟悉","topic":"雷暴与极端高温","date":"2026-06-20","answer":"charge up essential devices","study":{"meaning":"charge up(充电)+essential(必要的)+devices(设备) = 为重要设备充电以备不时之需。","related":"recharge devices、power up electronics、plug in devices","context":"灾害预防建议中，在暴风雨或极端天气来临前为关键设备充电。","expand":"charge up = 充满电(强调充满)；charge = 充电；essential = 必需的，近义：vital、crucial。"}},{"front":"Fill in two words.\nI was watching a really ______ ______ on Netflix.","back":"Answer：creepy documentary<br><br>Example：I was watching a really creepy documentary on Netflix.<br><br>Usage note：creepy = causing fear or unease; documentary = factual film.<br><br>中文确认：恐怖纪录片。","type":"短语表达卡","prompt":"collocation","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"旅行奇遇记","date":"2026-06-23","answer":"creepy documentary","study":{"meaning":"creepy(令人毛骨悚然的)+documentary(纪录片) = 令人感到害怕或不安的纪实节目。","related":"scary film、horror documentary、chilling documentary","context":"描述影视内容类型，creepy 强调令人不安、细思极恐的感觉。","expand":"creep(爬行)→creepy(令人毛骨悚然的)；名词：creep = 怪人；搭配：creepy crawlies(令人毛骨悚然的小虫)。"}},{"front":"Fill in three words.\nWe decided to ______ ______ ______ together.","back":"Answer：travel abroad<br><br>Example：We decided to travel abroad together.<br><br>Usage note：travel abroad = go to another country; abroad is an adverb.<br><br>中文确认：出国旅行。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"travel abroad","study":{"meaning":"travel(旅行)+abroad(在国外) = 去国外旅行，abroad 为副词。","related":"go overseas、travel internationally、go abroad","context":"旅行话题中，描述去另一个国家旅行的行为，常见于口语和书面。","expand":"abroad = 在/到国外(副词，无需加 to)；study abroad(留学)、work abroad(海外工作)；近义：overseas。"}},{"front":"Fill in two words.\nI was so ______ ______ the dangers.","back":"Answer：unaware of<br><br>Example：I was so unaware of the dangerous situation.<br><br>Usage note：unaware of = not knowing about; opposite of aware of.<br><br>中文确认：没有意识到 / 不了解。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"unaware of","study":{"meaning":"un(不)+aware(意识到)+of = 没有意识到、不知道某事物的存在或情况。","related":"ignorant of、oblivious to、uninformed about；反义：aware of、conscious of","context":"描述对某种危险或情况缺乏了解，后接名词或名词短语。","expand":"aware + of = 意识到；un- 前缀表否定；名词：unawareness；近义：oblivious(更强调完全没注意)。"}},{"front":"Fill in three words.\nWe ______ ______ ______ for this trip.","back":"Answer：have high hopes<br><br>Example：We have high hopes for this trip.<br><br>Usage note：have high hopes = be optimistic; common collocation.<br><br>中文确认：抱有很高期望。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"have high hopes","study":{"meaning":"have(持有)+high hopes(很高的期望) = 对某事抱有很高期望、很乐观。","related":"be optimistic、be hopeful、expect a lot、pin one's hopes on","context":"描述对未来或某事持乐观态度，常见搭配 have high hopes for。","expand":"hope 搭配：hope for the best、lose hope、give hope；high hopes = 高期望(复数形式)。"}},{"front":"Fill in two words.\nI'm ______ ______ to this type of environment.","back":"Answer：pretty used<br><br>Example：I'm pretty used to this type of environment.<br><br>Usage note：pretty used to = quite accustomed to; informal adverb pretty.<br><br>中文确认：相当习惯于。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"旅行奇遇记","date":"2026-06-23","answer":"pretty used","study":{"meaning":"pretty(相当)+used to(习惯于) = 相当习惯于某种环境或情况。","related":"quite accustomed to、fairly used to、well-adjusted to","context":"口语中描述对某环境或情况的适应程度，pretty 为非正式副词。","expand":"pretty 作副词 = 相当/挺；be used to + 名词/动名词 = 习惯于；对比：used to do(过去常常)。"}},{"front":"Fill in four words.\nAll we had to do was ______ ______ ______ ______.","back":"Answer：hop on the plane<br><br>Example：All we had to do was hop on the plane.<br><br>Usage note：hop on = board quickly/casually; informal phrasal verb.<br><br>中文确认：跳上飞机 / 登机。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"hop on the plane","study":{"meaning":"hop on(跳上)+the plane(飞机) = 轻松快捷地登上飞机，非正式口语表达。","related":"board the plane、get on the plane、catch a flight","context":"非正式口语中，描述轻松随意地登机或上车，hop 含轻快之意。","expand":"hop on 搭配：hop on the bus(上公交)、hop on a bike(骑上车)；hop off = 跳下；hop = 单脚跳。"}},{"front":"Fill in three words.\nWe ______ ______ ______ the hotel.","back":"Answer：taxied to<br><br>Example：We taxied to the hotel from the airport.<br><br>Usage note：taxi as a verb = travel by taxi; also used for planes moving on ground.<br><br>中文确认：乘出租车前往。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"熟悉","topic":"旅行奇遇记","date":"2026-06-23","answer":"taxied to","study":{"meaning":"taxi(乘出租车)+to(到) = 乘出租车前往某地，taxi 在此作动词。","related":"took a cab to、rode a taxi to、drove to","context":"旅行叙事中，描述乘出租车从一地到另一地的移动方式。","expand":"taxi 作动词还可指飞机在地面滑行；名词：taxi/cab；take a taxi = 打车。"}},{"front":"Fill in two words.\nThat's when the first ______ ______ happened.","back":"Answer：sus thing<br><br>Example：That's when the first sus thing happened at the hotel.<br><br>Usage note：sus = suspicious; internet slang, short for suspicious.<br><br>中文确认：可疑的事情。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"sus thing","study":{"meaning":"sus(可疑的，suspicious 的缩写)+thing(事情) = 可疑的、蹊跷的事情。","related":"suspicious thing、shady business、fishy matter","context":"网络俚语，sus 源于 suspicious 的缩写，在年轻人和网络文化中广泛使用。","expand":"sus 来自 suspicious 的截短；在游戏 Among Us 中流行；近义：sketchy、shady、fishy。"}},{"front":"Fill in two words.\nThey asked for ______ ______ at the front desk.","back":"Answer：identification<br><br>Example：They ask you for the identification at the front desk.<br><br>Usage note：identification = ID; front desk = hotel reception.<br><br>中文确认：身份证明 / 身份证。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"identification","study":{"meaning":"identify(识别)+fication(名词后缀) = 身份证明，指能证明身份的证件或文件。","related":"ID、identity card、passport、credentials","context":"酒店、机场等场所要求出示身份证明时的正式用语。","expand":"identify(识别)→identification(身份证明)；常缩写为 ID；相关：identify oneself(证明身份)。"}},{"front":"Fill in two words.\nHe ______ the worker and winked.","back":"Answer：nudged<br><br>Example：He nudges the worker and they exchange a wink.<br><br>Usage note：nudge = push gently with elbow; often used for getting attention.<br><br>中文确认：用肘轻推 / 暗示。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"nudged","study":{"meaning":"nudge(轻推)+d(过去式) = 用肘轻轻推一下以引起注意或暗示。","related":"poke、elbow、prod、gesture to","context":"描述用身体动作传递暗示信号，口语和叙事中常见。","expand":"nudge 搭配：nudge someone into action(推动某人行动)；名词：give someone a nudge；近义：poke(更用力)。"}},{"front":"Fill in three words.\nThey ______ ______ ______ at the front desk.","back":"Answer：exchange a wink<br><br>Example：They exchange a wink like some weird sign language.<br><br>Usage note：exchange a wink = share a knowing look; collocation.<br><br>中文确认：交换一个眼神 / 眨眼示意。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"exchange a wink","study":{"meaning":"exchange(交换)+a wink(一个眨眼) = 互相交换一个会意的眼神。","related":"share a knowing look、exchange glances、wink at each other","context":"描述两人之间用眼神交流默契或暗号，常在叙事中出现。","expand":"wink = 眨眼示意；wink at someone；nod and wink = 心照不宣；exchange = 交换。"}},{"front":"Fill in four words.\nHe ______ ______ ______ ______.","back":"Answer：assigns us to rooms<br><br>Example：He assigns us to our rooms at the hotel.<br><br>Usage note：assign = allocate; assign someone to something.<br><br>中文确认：给我们分配房间。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"熟悉","topic":"旅行奇遇记","date":"2026-06-23","answer":"assigns us to rooms","study":{"meaning":"assign(分配)+us(我们)+to rooms(到房间) = 把我们分配到各自的房间。","related":"allocate rooms to us、give us rooms、assign rooms","context":"酒店入住场景中，描述前台工作人员为客人分配房间的动作。","expand":"assign someone to something = 把某人分配到...；assign a task(布置任务)；名词：assignment(任务/作业)。"}},{"front":"Fill in three words.\nIt was a ______ ______ ______.","back":"Answer：big hotel chain<br><br>Example：It was a big hotel chain, so we had high hopes.<br><br>Usage note：chain = a group of businesses under the same brand.<br><br>中文确认：大型连锁酒店。","type":"话题词汇卡","prompt":"collocation","answertype":"phrase","task":"Fill in three words.","priority":"熟悉","topic":"旅行奇遇记","date":"2026-06-23","answer":"big hotel chain","study":{"meaning":"big(大的)+hotel chain(连锁酒店) = 大型连锁酒店品牌。","related":"major hotel brand、international hotel group、franchise","context":"旅行住宿话题中，描述属于大型连锁品牌的酒店。","expand":"chain = 连锁/链条；相关：chain store(连锁店)、chain reaction(连锁反应)、supply chain(供应链)。"}},{"front":"Fill in two words.\nWe were a bit ______ when we arrived.","back":"Answer：naive<br><br>Example：We were a bit naive thinking it was out of goodwill.<br><br>Usage note：naive = too trusting; lacking experience; from French.<br><br>中文确认：天真的 / 幼稚的。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"naive","study":{"meaning":"naive(天真的) = 过于轻信、缺乏经验的，源自法语。","related":"gullible、innocent、green、inexperienced；反义：sophisticated、worldly","context":"描述人因经验不足而过于信任他人，常带有轻微贬义。","expand":"源自拉丁语 nativus(天生的)；名词：naivety/naiveté；近义辨析：innocent(无辜的)更中性，gullible(易上当的)更贬义。"}},{"front":"Fill in three words.\nWe thought it was ______ ______ ______.","back":"Answer：out of goodwill<br><br>Example：We were thinking that it was out of goodwill.<br><br>Usage note：out of goodwill = from kindness; out of = because of.<br><br>中文确认：出于好意。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"out of goodwill","study":{"meaning":"out of(出于)+goodwill(好意) = 出于善意的动机做某事。","related":"with good intentions、in good faith、kindly","context":"描述行为的动机是善意的，常用于解释某人的行为。","expand":"out of + 名词 = 出于...；out of curiosity(出于好奇)、out of spite(出于恶意)；goodwill = 善意/信誉。"}},{"front":"Fill in two words.\nIt was an ______ ______.","back":"Answer：unpleasant experience<br><br>Example：It was a very unpleasant experience overall.<br><br>Usage note：unpleasant = not pleasant; opposite of pleasant.<br><br>中文确认：不愉快的经历。","type":"短语表达卡","prompt":"collocation","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"unpleasant experience","study":{"meaning":"un(不)+pleasant(愉快的)+experience(经历) = 让人感到不快或不舒服的经历。","related":"bad experience、uncomfortable encounter、disagreeable event","context":"描述负面的体验或遭遇，正式程度适中，口语和书面均可。","expand":"un- 前缀：unhappy、uncomfortable；pleasant ← please；experience 搭配：memorable/bad experience。"}},{"front":"Fill in two words.\nShe was a bit ______ at first.","back":"Answer：hesitant<br><br>Example：She was a bit hesitant before starting the massage.<br><br>Usage note：hesitant = unsure, reluctant; from hesitate.<br><br>中文确认：犹豫的 / 迟疑的。","type":"话题词汇卡","prompt":"topic_context","answertype":"word","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"hesitant","study":{"meaning":"hesitate(犹豫)+ant(形容词后缀) = 犹豫不决的、迟疑的。","related":"unsure、reluctant、wavering、undecided；反义：decisive、confident","context":"描述人在开始做某事前表现出不确定或迟疑的状态。","expand":"hesitate(动词)→hesitant(形容词)→hesitation(名词)；搭配：hesitant about doing something。"}},{"front":"Fill in four words.\nHe had the ______ ______ ______ ______.","back":"Answer：audacity to do that<br><br>Example：He had the audacity to do that right in front of us.<br><br>Usage note：audacity = bold rudeness; have the audacity to = dare to do something outrageous.<br><br>中文确认：竟敢那样做 / 厚颜无耻。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in four words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"audacity to do that","study":{"meaning":"audacity(胆大妄为/厚颜)+to do that(去做那事) = 竟然有胆量做那样的事，含贬义。","related":"have the nerve to、dare to、have the cheek to、brazenly","context":"表达对某人厚颜无耻或大胆行为的愤慨，have the audacity to 为固定搭配。","expand":"audacious(形容词) = 大胆的；audacity = 大胆/放肆；have the audacity to = 竟敢...。"}},{"front":"Fill in two words.\nIt ______ ______ so much when I think about it.","back":"Answer：pisses me off<br><br>Example：It pisses me off so so much even rethinking about it.<br><br>Usage note：piss off = make angry; informal/slang; very common in spoken English.<br><br>中文确认：让我非常生气。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"pisses me off","study":{"meaning":"piss(激怒)+me off = 让我非常生气，非正式俚语表达。","related":"annoys me、makes me angry、ticks me off、drives me crazy","context":"非正式口语中表达强烈愤怒，属粗俗用语，不宜在正式场合使用。","expand":"piss off = 激怒/滚开；类似：tick off(美式)、wind up；piss away = 挥霍。"}},{"front":"Fill in three words.\nShe didn't want to ______ ______ ______.","back":"Answer：make a scene<br><br>Example：She didn't wanna make a scene either, so we brushed it off.<br><br>Usage note：make a scene = cause a public disturbance; collocation.<br><br>中文确认：当众闹事 / 大吵大闹。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"make a scene","study":{"meaning":"make(制造)+a scene(一场闹剧) = 当众大吵大闹、引起不愉快的场面。","related":"cause a commotion、throw a tantrum、create a fuss、kick up a fuss","context":"描述在公共场合大声争吵或制造不愉快场面，常含负面含义。","expand":"scene = 场面/场景；搭配：cause a scene、create a scene；don't make a scene = 别丢人。"}},{"front":"Fill in three words.\nWe just ______ ______ ______ and moved on.","back":"Answer：brushed it off<br><br>Example：We brushed it off even though it was unpleasant.<br><br>Usage note：brush off = dismiss or ignore; phrasal verb with object.<br><br>中文确认：一笑了之 / 不当回事。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"brushed it off","study":{"meaning":"brush(刷)+off(掉)+it(它) = 把不愉快的事轻轻带过、不当回事。","related":"dismissed it、laughed it off、shrugged it off、ignored it","context":"描述对不愉快或尴尬的事选择忽视或不放在心上，常用于口语叙事。","expand":"brush off = 推开/不理会；brush aside = 不予理会；相关：shrug off(耸肩带过)、laugh off(一笑带过)。"}},{"front":"Fill in two words.\nWe ______ ______ by booking the wrong hotel.","back":"Answer：screwed up<br><br>Example：We screwed up — no taxis were answering and it was a resort.<br><br>Usage note：screw up = make a mistake; informal slang.<br><br>中文确认：搞砸了 / 犯了错。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"screwed up","study":{"meaning":"screw up(搞砸)+ed(过去式) = 把事情弄糟了、犯了严重错误。","related":"messed up、botched、fouled up、blundered","context":"非正式口语中，描述自己或他人犯错误或把事情搞砸。","expand":"screw up = 搞砸(非正式)；screw = 螺丝/拧；相关：mess up(近义)、screw up one's face(皱脸)。"}},{"front":"Fill in two words.\nIt doesn't get ______ ______ at night there.","back":"Answer：pitch dark<br><br>Example：It doesn't get pitch dark — it's a resort area.<br><br>Usage note：pitch dark = completely dark; pitch = degree of darkness.<br><br>中文确认：漆黑一片。","type":"短语表达卡","prompt":"collocation","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"旅行奇遇记","date":"2026-06-23","answer":"pitch dark","study":{"meaning":"pitch(极度的)+dark(黑暗) = 漆黑一片、伸手不见五指。","related":"completely dark、pitch-black、dead dark、inky black","context":"描述极度黑暗、完全看不见的环境，常用于夜间或无灯光的场景。","expand":"pitch 原意为沥青(pitch = 沥青)，引申为'极度的'；pitch-black = 漆黑的；相关：coal black。"}},{"front":"Fill in three words.\nWe heard a loud group of motorcycles ______ ______ ______.","back":"Answer：coming our way<br><br>Example：We heard motorcycles coming our way in the dark.<br><br>Usage note：come one's way = approach toward someone; directional phrase.<br><br>中文确认：朝我们方向驶来。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"coming our way","study":{"meaning":"coming(过来)+our way(我们的方向) = 朝我们这个方向移动过来。","related":"heading toward us、approaching us、coming toward us","context":"描述人或物体朝说话者的方向移动，常见于口语叙事。","expand":"come one's way = 朝某人方向来；引申：opportunities come my way(机会降临)；相关：go one's way。"}},{"front":"Fill in two words.\nThey were ______ ______ us on motorcycles.","back":"Answer：twirling around<br><br>Example：Bikers were twirling around us like a group of four or five.<br><br>Usage note：twirl = spin around; twirling around us = circling someone.<br><br>中文确认：围绕我们旋转。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in two words.","priority":"熟悉","topic":"旅行奇遇记","date":"2026-06-23","answer":"twirling around","study":{"meaning":"twirl(旋转)+ing+around(围绕) = 围绕着转圈，描述绕圈移动的动作。","related":"spinning around、circling around、revolving around","context":"描述人或物体围绕某处不断旋转移动，常见于叙事描写。","expand":"twirl = 快速旋转；近义辨析：spin(快速旋转)、whirl(回旋)、swirl(打旋)；twirl a baton(旋转指挥棒)。"}},{"front":"Fill in three words.\nWe tried to ______ ______ ______ despite being scared.","back":"Answer：keep my poker face<br><br>Example：I tried to keep my poker face — we were both freaking scared.<br><br>Usage note：poker face = expressionless face; from card game poker.<br><br>中文确认：保持扑克脸 / 不动声色。","type":"短语表达卡","prompt":"scenario_recall","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"keep my poker face","study":{"meaning":"keep(保持)+poker face(扑克脸) = 面无表情、不流露情绪。","related":"keep a straight face、hide one's feelings、remain expressionless","context":"描述在紧张或内心慌乱时故意保持面无表情，源自扑克游戏术语。","expand":"poker face 源自扑克牌游戏(不暴露手牌)；相关：keep a straight face(忍住不笑)；反义：wear one's heart on one's sleeve。"}},{"front":"Fill in two words.\nWe weren't ______ their presence.","back":"Answer：acknowledging<br><br>Example：We weren't acknowledging their presence at all.<br><br>Usage note：acknowledge = recognize or admit; acknowledging presence = showing awareness of someone.<br><br>中文确认：承认 / 注意到。","type":"短语表达卡","prompt":"cloze","answertype":"word","task":"Fill in two words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"acknowledging","study":{"meaning":"acknowledge(承认/注意到)+ing(进行时) = 承认或表示注意到了某事物的存在。","related":"recognizing、admitting、noticing、accepting","context":"描述对某人或某事表示关注或承认其存在，正式用语。","expand":"acknowledge = 承认/确认收到；acknowledgment(名词)；搭配：acknowledge someone's presence = 注意到某人在场。"}},{"front":"Fill in three words.\n______ ______, this happened in three days.","back":"Answer：and mind you<br><br>Example：And mind you, in the span of three days, this was like a teaching lesson.<br><br>Usage note：mind you = note this / bear in mind; discourse marker.<br><br>中文确认：而且你要知道 / 提醒你。","type":"短语表达卡","prompt":"cloze","answertype":"phrase","task":"Fill in three words.","priority":"必背","topic":"旅行奇遇记","date":"2026-06-23","answer":"and mind you","study":{"meaning":"and(而且)+mind you(注意) = 提醒你注意、你要知道，插入语。","related":"bear in mind、note that、keep in mind、please note","context":"口语中作为话语标记语，用于强调或补充说明一个重要信息。","expand":"mind you = 注意/你要知道；mind = 注意；相关：never mind(别介意)、mind your step(小心脚下)。"}},{"front":"Fill in five words.\nIt all happened ______ ______ ______ ______ ______.","back":"Answer：in the span of three days<br><br>Example：In the span of three days, this was like a teaching lesson.<br><br>Usage note：in the span of = within the duration of; formal time expression.<br><br>中文确认：在三天的时间内。","type":"句式结构卡","prompt":"sentence_frame","answertype":"phrase","task":"Fill in five words.","priority":"熟悉","topic":"旅行奇遇记","date":"2026-06-23","answer":"in the span of three days","study":{"meaning":"in the span of(在...的跨度内)+three days(三天) = 在短短三天的时间跨度内。","related":"within three days、over the course of three days、in three days","context":"正式时间表达，强调在较短的时间段内发生了许多事情。","expand":"span = 跨度/范围；life span(寿命)、attention span(注意力持续时间)；in the span of = 在...期间内。"}}];
-
-/* Word-level pronunciation data: level = tricky | watch | basic */
 const wordData={
 "heat":{level:"watch",br:"/hiːt/",us:"/hiːt/"},
 "exhaustion":{level:"tricky",br:"/ɪɡˈzɔːstʃən/",us:"/ɪɡˈzɔːstʃən/"},
@@ -356,20 +326,21 @@ const wordData={
 "span":{level:"watch",br:"/spæn/",us:"/spæn/"}
 };
 
-const key="real_note_workflow_v11_20260804_study_injected";
+const key="real_note_workflow_v12_20260804_minimal_ui";
 let saved=JSON.parse(localStorage.getItem(key)||"null");
 let state=saved||{cards:initialCards.map((c,i)=>({...c,id:i+1,status:"new",studied:false})),index:0,flipped:false,type:"all",ans:"all",dateFilter:"all",mode:"review"};
 if(!saved||!saved.mode){state.mode=state.mode||"review";if(saved){saved.mode="review";state=saved;}}
 if(!state.dateFilter)state.dateFilter="all";
 const $=id=>document.getElementById(id);
 function save(){localStorage.setItem(key,JSON.stringify(state));}
-function stripTask(t,task){return t.startsWith(task)?t.substring(task.length).replace(/^\n+/,""):t;}
+function stripTask(front,task){if(!task)return front;const t=task.replace(/\.$/,"");if(front.startsWith(task+"\n"))return front.slice(task.length+1);if(front.startsWith(task+" "))return front.slice(task.length+1);return front;}
 
 function speak(text,lang){
   if(!("speechSynthesis"in window))return;
   window.speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
-  u.lang=lang;u.rate=0.8;
+  u.lang=lang||"en-US";
+  u.rate=0.9;
   const vs=window.speechSynthesis.getVoices();
   const v=vs.find(v=>v.lang===lang);
   if(v)u.voice=v;
@@ -387,7 +358,6 @@ function speakFullCard(c){
   speak(full,"en-US");
 }
 
-/* Build per-word pronunciation HTML for the answer */
 function buildAnswerPron(answer){
   if(!answer)return"";
   const words=answer.split(/\s+/);
@@ -397,18 +367,31 @@ function buildAnswerPron(answer){
     const wd=wordData[clean];
     if(wd&&wd.level!=="basic"){
       const cls=wd.level;
-      html+=`<span class="aw"><span class="aw-top"><span class="aw-word ${cls}">${w}</span><button class="aw-speak" data-lang="en-US" data-text="${clean}">🔊</button></span><span class="aw-ipa ${cls}">${wd.br} <span style="color:#C7C7CC">|</span> ${wd.us}</span></span>`;
+      html+=`<span class="aw"><span class="aw-top"><span class="aw-word ${cls}">${w}</span><button class="aw-speak" data-lang="en-US" data-text="${clean}">&#128266;</button></span><span class="aw-ipa ${cls}">${wd.br} <span style="color:#C7C7CC">|</span> ${wd.us}</span></span>`;
     }else{
-      html+=`<span class="aw"><span class="aw-top"><span class="aw-word">${w}</span><button class="aw-speak" data-lang="en-US" data-text="${clean}">🔊</button></span></span>`;
+      html+=`<span class="aw"><span class="aw-top"><span class="aw-word">${w}</span><button class="aw-speak" data-lang="en-US" data-text="${clean}">&#128266;</button></span></span>`;
     }
   });
   html+="</div>";
   return html;
 }
 
-/* Parse back content into sections */
+/* Build back content — Study mode: only 4 dimensions; Review mode: full back content */
 function buildBackHTML(c){
   const answer=c.answer||function(){const m=c.back.match(/Answer：(.+?)(?:<br>|$)/);return m?m[1].trim():"";}();
+
+  /* Study mode: only show study dimensions, skip Example/Usage note/中文确认 */
+  if(isStudy()&&c.study){
+    let html=buildAnswerPron(answer);
+    const s=c.study;
+    if(s.meaning)html+=`<div class="study-section"><div class="study-label">Meaning</div><div class="study-content">${s.meaning}</div></div>`;
+    if(s.related)html+=`<div class="study-section"><div class="study-label collapsible collapsed" onclick="this.classList.toggle('collapsed')"><span>Related</span><span class="collapse-icon">&#9660;</span></div><div class="collapse-body"><div class="study-content">${s.related}</div></div></div>`;
+    if(s.context)html+=`<div class="study-section"><div class="study-label">Context</div><div class="study-content">${s.context}</div></div>`;
+    if(s.expand)html+=`<div class="study-section"><div class="study-label">Expand</div><div class="study-content">${s.expand}</div></div>`;
+    return html;
+  }
+
+  /* Review mode: show full back content */
   const parts=c.back.split(/<br><br>/);
   let html=buildAnswerPron(answer);
   parts.forEach(p=>{
@@ -416,18 +399,6 @@ function buildBackHTML(c){
     else if(p.startsWith("Usage note："))html+=`<div class="back-section"><div class="back-label">Usage note</div><div>${p.replace(/^Usage note：/,"")}</div></div>`;
     else if(p.startsWith("中文确认："))html+=`<div class="back-section"><div class="back-label">中文确认</div><div>${p.replace(/^中文确认：/,"")}</div></div>`;
   });
-  /* Study mode: add 4-dimension learning content */
-  if(isStudy()&&c.study){
-    const s=c.study;
-    /* 1. 中文释义 */
-    if(s.meaning)html+=`<div class="study-section"><div class="study-label">📖 中文释义</div><div class="study-content">${s.meaning}</div></div>`;
-    /* 2. 相关表达 (collapsible, collapsed by default) */
-    if(s.related)html+=`<div class="study-section"><div class="study-label collapsible collapsed" onclick="this.classList.toggle('collapsed')"><span>🔗 相关表达</span><span class="collapse-icon">▼</span></div><div class="collapse-body"><div class="study-content">${s.related}</div></div></div>`;
-    /* 3. 适用语境 */
-    if(s.context)html+=`<div class="study-section"><div class="study-label">💬 适用语境</div><div class="study-content">${s.context}</div></div>`;
-    /* 4. 发散拓展 */
-    if(s.expand)html+=`<div class="study-section"><div class="study-label">✨ 发散拓展</div><div class="study-content">${s.expand}</div></div>`;
-  }
   return html;
 }
 
@@ -435,10 +406,8 @@ function filtered(){
   return state.cards.filter(c=>{
     if(c.status==="deleted")return false;
     if(isStudy()){
-      /* Study mode: filter by date */
       if(state.dateFilter&&state.dateFilter!=="all"&&c.date!==state.dateFilter)return false;
     }else{
-      /* Review mode: filter by type and answer type */
       if(state.type!=="all"&&c.type!==state.type)return false;
       if(state.ans!=="all"&&c.answertype!==state.ans)return false;
     }
@@ -462,7 +431,6 @@ function render(){
   const v=filtered(),c=current();
   const study=isStudy();
 
-  /* Toggle mode UI */
   $("modeStudy").classList.toggle("active",study);
   $("modeReview").classList.toggle("active",!study);
   $("reviewStats").classList.toggle("hidden",study);
@@ -472,7 +440,6 @@ function render(){
   $("reviewFilters").classList.toggle("hidden",study);
   $("studyFilters").classList.toggle("hidden",!study);
   $("progressBar").style.display=study?"block":"none";
-  $("card").classList.toggle("study-mode",study);
 
   if(study){
     updateDateOptions();
@@ -490,21 +457,19 @@ function render(){
     $("pos").textContent=c?`${state.index+1}/${v.length}`:"0/0";
   }
 
-  if(!c){$("front").textContent="No cards match the current filter";$("backInner").innerHTML="";$("taskBadge").textContent="";$("meta").innerHTML="";return;}
-  $("meta").innerHTML=[c.topic,c.type,c.prompt,c.answertype].map((x,i)=>`<span class="tag ${i===0?"gray":i===3?"amber":""}">${x}</span>`).join("");
-  $("taskBadge").textContent=c.task;
+  if(!c){$("front").textContent="No cards match the current filter";$("backInner").innerHTML="";$("flipHint").style.display="none";return;}
+
   $("front").textContent=stripTask(c.front,c.task);
   $("backInner").innerHTML=buildBackHTML(c);
 
   if(study){
     $("back").classList.add("show");
-    $("flip").style.display="none";
-    /* Auto-speak answer on card enter */
-    setTimeout(()=>speakFullCard(c),300);
+    $("flipHint").style.display="none";
+    /* No auto-read */
   }else{
     $("back").classList.toggle("show",state.flipped);
-    $("flip").style.display="block";
-    $("flip").textContent=state.flipped?"Hide Answer":"Show Answer";
+    $("flipHint").style.display=state.flipped?"none":"block";
+    $("flipHint").textContent="Tap to flip";
   }
 
   $("frontEdit").value=stripTask(c.front,c.task);
@@ -517,6 +482,9 @@ function move(d){
   card.classList.add("fade");
   setTimeout(()=>{
     state.index+=d;
+    if(state.index<0)state.index=0;
+    const v=filtered();
+    if(state.index>=v.length)state.index=v.length-1;
     if(!isStudy())state.flipped=false;
     render();
     card.classList.remove("fade");
@@ -530,23 +498,77 @@ $("modeReview").onclick=()=>{state.mode="review";state.flipped=false;state.index
 $("typeFilter").onchange=e=>{state.type=e.target.value;state.index=0;state.flipped=false;render();};
 $("ansFilter").onchange=e=>{state.ans=e.target.value;state.index=0;state.flipped=false;render();};
 $("dateFilter").onchange=e=>{state.dateFilter=e.target.value;state.index=0;render();};
-$("flip").onclick=()=>{state.flipped=!state.flipped;render();};
-$("nextBtn").onclick=()=>move(1);
-$("prevBtn").onclick=()=>move(-1);
-$("knownBtn").onclick=()=>{const c=current();if(c)c.status="known";move(1);};
-$("hardBtn").onclick=()=>{const c=current();if(c)c.status="hard";move(1);};
-$("deleteBtn").onclick=()=>{const c=current();if(c)c.status="deleted";state.flipped=false;render();};
-$("editBtn").onclick=()=>$("editor").classList.toggle("hidden");
-$("saveBtn").onclick=()=>{const c=current();if(!c)return;c.front=$("frontEdit").value.trim();c.back=$("backEdit").value.trim().replace(/\n/g,"<br>");$("editor").classList.add("hidden");render();};
 
-/* Study mode buttons — minimal: prev / read aloud / next */
+/* Review mode: tap to flip */
+$("card").addEventListener("click",function(e){
+  if(isStudy())return;
+  if(e.target.classList.contains("aw-speak"))return;
+  if(e.target.closest(".editor"))return;
+  if(e.target.tagName==="BUTTON")return;
+  state.flipped=!state.flipped;
+  render();
+});
+
+/* Review mode: swipe gestures */
+let touchStartX=0,touchStartY=0,touchCurrentX=0,swiping=false;
+const cardEl=$("card");
+const swipeLeftHint=$("swipeLeftHint");
+const swipeRightHint=$("swipeRightHint");
+
+cardEl.addEventListener("touchstart",function(e){
+  if(isStudy())return;
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
+  touchCurrentX=touchStartX;
+  swiping=false;
+},{passive:true});
+
+cardEl.addEventListener("touchmove",function(e){
+  if(isStudy())return;
+  touchCurrentX=e.touches[0].clientX;
+  const dx=touchCurrentX-touchStartX;
+  const dy=e.touches[0].clientY-touchStartY;
+  if(Math.abs(dx)>20&&Math.abs(dx)>Math.abs(dy)){
+    swiping=true;
+    const absDx=Math.abs(dx);
+    if(dx<0){
+      swipeLeftHint.style.opacity=Math.min(absDx/100,0.8);
+      swipeRightHint.style.opacity=0;
+    }else{
+      swipeRightHint.style.opacity=Math.min(absDx/100,0.8);
+      swipeLeftHint.style.opacity=0;
+    }
+  }
+},{passive:true});
+
+cardEl.addEventListener("touchend",function(e){
+  if(isStudy())return;
+  const dx=touchCurrentX-touchStartX;
+  swipeLeftHint.style.opacity=0;
+  swipeRightHint.style.opacity=0;
+
+  if(swiping&&Math.abs(dx)>80){
+    const c=current();
+    if(!c)return;
+    if(dx>0){
+      /* Swipe right = got it */
+      c.status="known";
+      move(1);
+    }else{
+      /* Swipe left = hard */
+      c.status="hard";
+      move(1);
+    }
+  }
+},{passive:true});
+
+/* Study mode buttons */
 $("speakAllBtn").onclick=()=>{const c=current();if(c)speakFullCard(c);};
 $("studyNextBtn").onclick=()=>move(1);
 $("studyPrevBtn").onclick=()=>move(-1);
 
 $("resetBtn").onclick=()=>{localStorage.removeItem(key);state={cards:initialCards.map((c,i)=>({...c,id:i+1,status:"new",studied:false})),index:0,flipped:false,type:"all",ans:"all",dateFilter:"all",mode:"review"};render();};
 $("exportBtn").onclick=()=>{
-  /* Copy summary for AI learning (Gemini etc.) */
   const topics=[...new Set(state.cards.filter(c=>c.status!=="deleted").map(c=>c.topic))];
   let text="My English learning notes\nPlease help me study these notes one by one, don't skip any:\n\n";
   topics.forEach(topic=>{
@@ -562,18 +584,19 @@ $("exportBtn").onclick=()=>{
     });
   });
   navigator.clipboard.writeText(text).then(()=>{
-    $("exportBtn").textContent="✓ Copied!";
+    $("exportBtn").textContent="Copied!";
     setTimeout(()=>{$("exportBtn").textContent="Copy for AI";},2000);
   }).catch(()=>{
     const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);
-    $("exportBtn").textContent="✓ Copied!";
+    $("exportBtn").textContent="Copied!";
     setTimeout(()=>{$("exportBtn").textContent="Copy for AI";},2000);
   });
 };
 
-/* Delegate click for speak buttons inside back area */
+/* Delegate click for speak buttons */
 document.addEventListener("click",e=>{
   if(e.target.classList.contains("aw-speak")){
+    e.stopPropagation();
     speak(e.target.dataset.text,e.target.dataset.lang);
   }
 });
@@ -581,7 +604,7 @@ document.addEventListener("click",e=>{
 /* Preload voices */
 if("speechSynthesis"in window){window.speechSynthesis.onvoiceschanged=()=>{};}
 
-/* Register Service Worker for PWA offline support */
+/* Register Service Worker */
 if("serviceWorker"in navigator){
   navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
