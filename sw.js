@@ -1,4 +1,4 @@
-const CACHE_NAME = "english-cards-v7";
+const CACHE_NAME = "english-cards-v8";
 const ASSETS = [
   "./real_workflow_v5_review.html",
   "./manifest.json",
